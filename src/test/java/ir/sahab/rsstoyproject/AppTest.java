@@ -1,4 +1,4 @@
-package ir.sahab.rssToyProject;
+package ir.sahab.rsstoyproject;
 
 import static org.junit.Assert.assertTrue;
 
