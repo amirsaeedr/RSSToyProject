@@ -1,4 +1,4 @@
-package ir.sahab.rsstoyproject;
+package ir.sahab.rsstoyproject.Controller;
 
 import ir.sahab.rsstoyproject.model.News;
 import org.jsoup.Jsoup;

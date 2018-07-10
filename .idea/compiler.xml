@@ -6,8 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="RssToyProject" />
+        <module name="rss-toy-project" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="rss-toy-project" target="1.7" />
+    </bytecodeTargetLevel>
   </component>
 </project>
