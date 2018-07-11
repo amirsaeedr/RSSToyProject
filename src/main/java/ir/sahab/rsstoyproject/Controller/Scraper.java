@@ -43,7 +43,7 @@ public class Scraper {
         news.setLink(link);
     }
 
-    private void getNewsContent(News news, String link, Element item){
+    private void getNewsContent(News news,String link ,Element item){
         String content;
         String contentClass = getContentClass(link);
         content = contentDoc.getElementsByClass(contentClass).text();
@@ -78,7 +78,7 @@ public class Scraper {
             getNewsAuthor(tempNews,item);
             getNewsDate(tempNews,item);
             getNewsLink(tempNews,item);
-            getNewsContent(tempNews, tempNews.getLink() ,item);
+            getNewsContent(tempNews,tempNews.getLink() ,item);
             newsList.add(tempNews);
         }
         return newsList;
