@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Scraper {
     private Document contentDoc = null;
-    Document RSSDoc = null;
+    private Document RSSDoc = null;
     public void start(String URL){
         List<News> newsList;
         try {
@@ -21,10 +21,6 @@ public class Scraper {
             e.printStackTrace();
         }
         newsList = getNewsList();
-    }
-
-    private void getNewswebSite(News news, Element item){
-
     }
 
     private void getNewsTitle(News news, Element item){
@@ -47,15 +43,14 @@ public class Scraper {
         news.setLink(link);
     }
 
-    private String getNewsContent(String link){
-        String content="";
-        content =getContentClass(link);
-        
+    private String getNewsContent(String link ,Element item){
+        String content;
+        String contentClass = getContentClass(link);
+        content = item.getElementsByClass(contentClass).text();
         return content;
     }
 
     private void getContentDocument(String link){
-
         try {
             contentDoc = Jsoup.connect(link).get();
         } catch (IOException e) {
@@ -83,8 +78,7 @@ public class Scraper {
             getNewsAuthor(tempNews,item);
             getNewsDate(tempNews,item);
             getNewsLink(tempNews,item);
-            getNewswebSite(tempNews,item);
-            getNewsContent(tempNews.getLink());
+            getNewsContent(tempNews.getLink() ,item);
             newsList.add(tempNews);
         }
         return newsList;
