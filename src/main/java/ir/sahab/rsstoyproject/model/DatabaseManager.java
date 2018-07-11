@@ -49,7 +49,7 @@ public abstract class DatabaseManager {
             e.printStackTrace();
         }
     }
-    protected static void add(String values){
+    public void add(String values){
         try {
             Connection DatabaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSS_Database", "root", password);
             Statement DatabaseStatement = DatabaseConnector.createStatement();
@@ -59,7 +59,7 @@ public abstract class DatabaseManager {
             e.printStackTrace();
         }
     }
-    protected static ResultSet get(String query){
+    public ResultSet get(String query){
         try {
             Connection DatabaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSS_Database", "root", password);
             Statement DatabaseStatement = DatabaseConnector.createStatement();
