@@ -2,19 +2,17 @@ package ir.sahab.rsstoyproject.model;
 
 import java.sql.*;
 
-public class TemplateManager  {
+public class ConfigManager {
     private static String password;
     private static String user;
-    private static TemplateManager instance;
+    private static ConfigManager instance;
     Connection DatabaseConnector;
-    Statement DatabaseStatement;
 
-    private TemplateManager(String user, String password) {
+    private ConfigManager(String user, String password) {
         this.user = user;
         this.password = password;
         try {
             DatabaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSS_Database", user, password);
-            DatabaseStatement = DatabaseConnector.createStatement();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -23,22 +21,22 @@ public class TemplateManager  {
 //        this.TableName = "Template";
 //        createTable();
     }
-    private TemplateManager(){}
-    public static TemplateManager getInstance(String user, String password) {
+    private ConfigManager(){}
+    public static ConfigManager getInstance(String user, String password) {
         if (instance == null) {
-            instance = new TemplateManager(user, password);
+            instance = new ConfigManager(user, password);
         }
         return instance;
     }
-    public static TemplateManager getInstance() {
+    public static ConfigManager getInstance() {
         if (instance == null) {
-            instance = new TemplateManager();
+            instance = new ConfigManager();
         }
         return instance;
     }
-    public void add(String site, String contentClass){
+    public void addConfig(String site, String contentClass){
         try {
-            PreparedStatement DatabaseStatement = DatabaseConnector.prepareStatement("insert into TEMPLATE values(?, ?);");
+            PreparedStatement DatabaseStatement = DatabaseConnector.prepareStatement("insert into Config values(?, ?);");
             DatabaseStatement.setString(1, site);
             DatabaseStatement.setString(2, contentClass);
             DatabaseStatement.executeUpdate();
@@ -47,11 +45,15 @@ public class TemplateManager  {
             e.printStackTrace();
         }
     }
-    public ResultSet get(String query) {
+    public String getConfig(String site) {
         try {
-            ResultSet QueryResult = DatabaseStatement.executeQuery(query);
+            PreparedStatement query = DatabaseConnector.prepareStatement("select * from Config where site = ?");
+            query.setString(1, site);
+            ResultSet queryResult = query.executeQuery();
+            while (queryResult.next()) {
+                return queryResult.getString("contentClass");
+            }
             DatabaseConnector.close();
-            return QueryResult;
         } catch (SQLException e) {
             e.printStackTrace();
         }

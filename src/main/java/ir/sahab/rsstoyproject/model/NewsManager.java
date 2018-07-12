@@ -62,4 +62,12 @@ public class NewsManager {
         }
         return null;
     }
+//    public String bulidQuery(int QueryType)
+//    {
+//        switch(QueryType){
+//            case 1:
+//                return
+//        }
+//
+//    }
 }

@@ -60,10 +60,10 @@ public class Scraper {
 
     private String getContentClass(String link){
         getContentDocument(link);
-        TemplateController templateController = new TemplateController();
-        String contentClass = templateController.getTemplate(link);
+        ConfigController configController = new ConfigController();
+        String contentClass = configController.getConfig(link);
         if (contentClass==null || contentClass==""){
-            contentClass = templateController.findTemplate(contentDoc);
+            contentClass = configController.findConfig(contentDoc);
         }
         return contentClass;
     }
