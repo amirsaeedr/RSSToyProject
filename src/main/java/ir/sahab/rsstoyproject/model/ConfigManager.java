@@ -1,6 +1,7 @@
 package ir.sahab.rsstoyproject.model;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class ConfigManager {
     private static String password;
@@ -60,7 +61,4 @@ public class ConfigManager {
         return null;
     }
 
-    public String getRSS(int id) {
-        return null;
-    }
 }
