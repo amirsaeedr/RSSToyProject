@@ -59,4 +59,8 @@ public class ConfigManager {
         }
         return null;
     }
+
+    public String getRSS(int id) {
+        return null;
+    }
 }

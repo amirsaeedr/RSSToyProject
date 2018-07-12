@@ -1,5 +1,6 @@
 package ir.sahab.rsstoyproject.Controller;
 
+import ir.sahab.rsstoyproject.model.ConfigManager;
 import ir.sahab.rsstoyproject.model.News;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,10 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Scraper {
+public class Scraper implements Runnable{
     private Document contentDoc = null;
     private Document RSSDoc = null;
-    public void start(String URL){
+    private Thread thread;
+    private void scrape(String URL){
         List<News> newsList;
         try {
             RSSDoc = Jsoup.connect(URL).get();
@@ -87,5 +89,25 @@ public class Scraper {
             System.out.println("news content: \t"+tempNews.getContent());
         }
         return newsList;
+    }
+
+    @Override
+    public void run() {
+        ConfigManager configManager= ConfigManager.getInstance();
+        int id =1;
+        while (true){
+//            String RSSLink =configManager.getRSS(id);
+//            scrape(RSSLink);
+            id++;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void start() {
+        thread= new Thread(this,"IOThread");
+        thread.start();
     }
 }
