@@ -4,6 +4,8 @@ import ir.sahab.rsstoyproject.Controller.Scraper;
 import ir.sahab.rsstoyproject.model.NewsManager;
 import ir.sahab.rsstoyproject.model.ConfigManager;
 
+import java.util.ArrayList;
+
 /**
  * RSS feed reader!
  *
@@ -11,7 +13,7 @@ import ir.sahab.rsstoyproject.model.ConfigManager;
 public class App
 {
     public static void main( String[] args ) {
-        String databasePassword = "1375109";
+        String databasePassword = "li24v2hk77";
         String user = "root";
         NewsManager newsManager = NewsManager.getInstance(user, databasePassword);
         ConfigManager configManger = ConfigManager.getInstance(user,databasePassword);

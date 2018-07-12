@@ -61,4 +61,18 @@ public class ConfigManager {
         return null;
     }
 
+    public ArrayList<String> getURLs(){
+        ArrayList<String> URLs = new ArrayList<>();
+        try {
+            PreparedStatement query = DatabaseConnector.prepareStatement("select * from Config");
+            ResultSet queryResult = query.executeQuery();
+            while (queryResult.next()) {
+                URLs.add(queryResult.getString("site"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return URLs;
+    }
+
 }

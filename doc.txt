@@ -2,7 +2,7 @@ Initial Database Setup:
 log in to your mySQL and run the SQL codes below:
 
 create database RSS_Database
-use database RSS_Data base
+use RSS_Data base
 create table if not exists Config(site varchar(50), contentClass varchar(50), primary key(site));
 create table if not exists News(title varchar(1000) not null, date varchar(50) not null, author varchar(50), link varchar(300) not null , content varchar(50000),site varchar(50), primary key (link));
 insert into Config values("http://www.tabnak.ir/fa/rss/allnews", "body");

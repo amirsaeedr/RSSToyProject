@@ -8,6 +8,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -20,8 +21,8 @@ public class Scraper implements Runnable{
     private NewsManager newsManager = NewsManager.getInstance();
     private Thread thread;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
-    private void scrape(){
-        RSSAddress = "https://www.farsnews.com/rss";
+    private void scrape(String link){
+        RSSAddress = link;
         try {
             RSSDoc = Jsoup.connect(RSSAddress).get();
         } catch (IOException e) {
@@ -94,21 +95,11 @@ public class Scraper implements Runnable{
     @Override
     public void run() {
         ConfigManager configManager= ConfigManager.getInstance();
-        int id =1;
-//        while (true){
-           // String RSSLink =configManager.getRSS(id);
-        scrape();
-        Lock readLock = lock.readLock();
-        readLock.lock();
-        //System.out.println("finish");
-        readLock.unlock();
-//            id++;
-//            try {
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        ArrayList<String> links = configManager.getURLs();
+        for (String link:links) {
+            scrape(link);
+        }
+        System.out.println("done");
     }
 
     public void start() {
