@@ -2,6 +2,7 @@ package ir.sahab.rsstoyproject;
 
 import ir.sahab.rsstoyproject.Controller.ContentFinder;
 import ir.sahab.rsstoyproject.Controller.ContentFinder;
+import ir.sahab.rsstoyproject.Controller.IOController;
 import ir.sahab.rsstoyproject.Controller.Scraper;
 import ir.sahab.rsstoyproject.model.DatabaseManager;
 import ir.sahab.rsstoyproject.model.NewsManager;
