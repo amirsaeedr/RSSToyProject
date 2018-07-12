@@ -1,18 +1,10 @@
 package ir.sahab.rsstoyproject;
-
 import ir.sahab.rsstoyproject.Controller.ContentFinder;
 import ir.sahab.rsstoyproject.Controller.ContentFinder;
 import ir.sahab.rsstoyproject.Controller.IOController;
 import ir.sahab.rsstoyproject.Controller.Scraper;
-import ir.sahab.rsstoyproject.model.DatabaseManager;
 import ir.sahab.rsstoyproject.model.NewsManager;
 import ir.sahab.rsstoyproject.model.TemplateManager;
-
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 
 /**
  * RSS feed reader!
@@ -22,11 +14,13 @@ public class App
 {
     public static void main( String[] args )
     {
-        String databasePassword = "1375109";
+        String databasePassword = "li24v2hk77";
         String user = "root";
         Scraper RSSReader = new Scraper();
-        DatabaseManager newsManager = NewsManager.getInstance(user, databasePassword);
-        DatabaseManager templateManger = TemplateManager.getInstance(user,databasePassword);
+
+//        TemplateManager templateManger = TemplateManager.getInstance(user,databasePassword);
+//        NewsManager newsManager = NewsManager.getInstance(user, databasePassword);
+//        newsManager.add("test", "1 June 1998", "A", "nothing3", "content");
         String URL = "https://www.farsnews.com/rss";
         RSSReader.start(URL);
     }
