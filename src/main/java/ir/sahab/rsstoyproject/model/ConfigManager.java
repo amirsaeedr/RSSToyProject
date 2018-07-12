@@ -40,7 +40,6 @@ public class ConfigManager {
             DatabaseStatement.setString(1, site);
             DatabaseStatement.setString(2, contentClass);
             DatabaseStatement.executeUpdate();
-            DatabaseConnector.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

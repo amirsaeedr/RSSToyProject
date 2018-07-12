@@ -15,15 +15,9 @@ public class NewsManager {
         this.password = password;
         try {
             DatabaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSS_Database", user, password);
-            DatabaseStatement = DatabaseConnector.createStatement();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//        createDatabase();
-//        this.TableDeclaration = "NEWS(title varchar(100) not null, date varchar(50) not null," +
-//                " author varchar(50), link varchar(50) not null, content varchar(5000), primary key (link));";
-//        this.TableName = "NEWS";
-//        createTable();
     }
     public static NewsManager getInstance(String user, String password) {
         if (instance == null) {
@@ -37,17 +31,16 @@ public class NewsManager {
         }
         return instance;
     }
-    public void add(String title, String date, String author, String link, String content){
+    public void add(String title, String date, String author, String link, String content, String site){
         try {
-            PreparedStatement DatabaseStatement = DatabaseConnector.prepareStatement("insert into NEWS values(?, ?, ?, ?, ?);");
+            PreparedStatement DatabaseStatement = DatabaseConnector.prepareStatement("insert into News values(?, ?, ?, ?, ?, ?);");
             DatabaseStatement.setString(1, title);
             DatabaseStatement.setString(2, date);
             DatabaseStatement.setString(3, author);
             DatabaseStatement.setString(4, link);
             DatabaseStatement.setString(5, content);
-            int i =DatabaseStatement.executeUpdate();
-            System.out.println(i);
-            DatabaseConnector.close();
+            DatabaseStatement.setString(6, site);
+            DatabaseStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -55,7 +48,6 @@ public class NewsManager {
     public ResultSet get(String query) {
         try {
             ResultSet QueryResult = DatabaseStatement.executeQuery(query);
-            DatabaseConnector.close();
             return QueryResult;
         } catch (SQLException e) {
             e.printStackTrace();

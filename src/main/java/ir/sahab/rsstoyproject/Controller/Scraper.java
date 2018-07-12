@@ -1,6 +1,7 @@
 package ir.sahab.rsstoyproject.Controller;
 
 import ir.sahab.rsstoyproject.model.News;
+import ir.sahab.rsstoyproject.model.NewsManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,7 +14,10 @@ import java.util.List;
 public class Scraper {
     private Document contentDoc = null;
     private Document RSSDoc = null;
+    private String RSSAddress;
+    private NewsManager newsManager = NewsManager.getInstance();
     public void start(String URL){
+        RSSAddress = URL;
         List<News> newsList;
         try {
             RSSDoc = Jsoup.connect(URL).get();
@@ -46,7 +50,7 @@ public class Scraper {
     private void getNewsContent(News news,String link ,Element item){
         String content;
         String contentClass = getContentClass(link);
-        content = contentDoc.getElementsByClass("nwstxtmainpane").text();
+        content = contentDoc.getElementsByClass(contentClass).text();
         news.setContent(content);
     }
 
@@ -61,7 +65,7 @@ public class Scraper {
     private String getContentClass(String link){
         getContentDocument(link);
         ConfigController configController = new ConfigController();
-        String contentClass = configController.getConfig(link);
+        String contentClass = configController.getConfig(RSSAddress);
         if (contentClass==null || contentClass==""){
             contentClass = configController.findConfig(contentDoc);
         }
@@ -79,12 +83,17 @@ public class Scraper {
             getNewsDate(tempNews,item);
             getNewsLink(tempNews,item);
             getNewsContent(tempNews,tempNews.getLink() ,item);
+            tempNews.setSite(RSSAddress);
             newsList.add(tempNews);
             System.out.println("news title: \t"+tempNews.getTitle());
             System.out.println("news author: \t"+tempNews.getAuthor());
             System.out.println("news link: \t"+tempNews.getLink());
             System.out.println("news date: \t"+tempNews.getDate());
             System.out.println("news content: \t"+tempNews.getContent());
+            System.out.println("news site: \t"+tempNews.getSite());
+            newsManager.add(tempNews.getTitle(), tempNews.getDate(), tempNews.getAuthor(), tempNews.getLink(), tempNews.getContent(), tempNews.getSite());
+            System.out.println("*****");
+
         }
         return newsList;
     }

@@ -1,4 +1,9 @@
 package ir.sahab.rsstoyproject;
+import java.security.*;
+
+import com.sun.xml.internal.messaging.saaj.util.Base64;
+import sun.misc.BASE64Encoder;
+import java.math.*;
 import ir.sahab.rsstoyproject.Controller.IOController;
 import ir.sahab.rsstoyproject.Controller.Scraper;
 import ir.sahab.rsstoyproject.Controller.ConfigController;
@@ -15,13 +20,12 @@ public class App
     {
         String databasePassword = "li24v2hk77";
         String user = "root";
-        Scraper RSSReader = new Scraper();
-        ConfigManager templateManger = ConfigManager.getInstance(user,databasePassword);
         NewsManager newsManager = NewsManager.getInstance(user, databasePassword);
-//        newsManager.add("test", "1 June 1998", "A", "nothing3", "content");
+        ConfigManager configManger = ConfigManager.getInstance(user,databasePassword);
+        Scraper RSSReader = new Scraper();
         String URL = "https://www.farsnews.com/rss";
-        //RSSReader.start(URL);
-        ConfigController configController = new ConfigController();
-        configController.getConfig("fars");
+        RSSReader.start(URL);
+//        ConfigController configController = new ConfigController();
+//        configController.getConfig("fars");
     }
 }

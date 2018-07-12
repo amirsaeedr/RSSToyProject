@@ -6,13 +6,16 @@ public class News {
     private String author;
     private String link;
     private String content;
+    private String site;
 
-    public News(String title, String date, String author, String link, String content) {
+
+    public News(String title, String date, String author, String link, String content, String site) {
         this.title = title;
         this.date = date;
         this.author = author;
         this.link = link;
         this.content = content;
+        this.site = site;
     }
 
     public News() {
@@ -61,4 +64,8 @@ public class News {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public String getSite() { return site; }
+
+    public void setSite(String site) { this.site = site; }
 }
