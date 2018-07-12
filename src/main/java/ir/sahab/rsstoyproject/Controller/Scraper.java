@@ -2,27 +2,32 @@ package ir.sahab.rsstoyproject.Controller;
 
 import ir.sahab.rsstoyproject.model.ConfigManager;
 import ir.sahab.rsstoyproject.model.News;
+import ir.sahab.rsstoyproject.model.NewsManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
 public class Scraper implements Runnable{
     private Document contentDoc = null;
     private Document RSSDoc = null;
+    private String RSSAddress;
+    private NewsManager newsManager = NewsManager.getInstance();
     private Thread thread;
-    private void scrape(String URL){
-        List<News> newsList;
+    private ReadWriteLock lock = new ReentrantReadWriteLock();
+    private void scrape(){
+        RSSAddress = "https://www.farsnews.com/rss";
         try {
-            RSSDoc = Jsoup.connect(URL).get();
+            RSSDoc = Jsoup.connect(RSSAddress).get();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        newsList = getNewsList();
+        getNewsList();
     }
 
     private void getNewsTitle(News news, Element item){
@@ -48,7 +53,7 @@ public class Scraper implements Runnable{
     private void getNewsContent(News news,String link ,Element item){
         String content;
         String contentClass = getContentClass(link);
-        content = contentDoc.getElementsByClass("nwstxtmainpane").text();
+        content = contentDoc.getElementsByClass(contentClass).text();
         news.setContent(content);
     }
 
@@ -63,15 +68,14 @@ public class Scraper implements Runnable{
     private String getContentClass(String link){
         getContentDocument(link);
         ConfigController configController = new ConfigController();
-        String contentClass = configController.getConfig(link);
+        String contentClass = configController.getConfig(RSSAddress);
         if (contentClass==null || contentClass==""){
             contentClass = configController.findConfig(contentDoc);
         }
         return contentClass;
     }
 
-    private List<News> getNewsList(){
-        List<News> newsList = new ArrayList<>();
+    private void getNewsList(){
         Elements items = RSSDoc.select("item");
         News tempNews;
         for (Element item: items) {
@@ -81,33 +85,34 @@ public class Scraper implements Runnable{
             getNewsDate(tempNews,item);
             getNewsLink(tempNews,item);
             getNewsContent(tempNews,tempNews.getLink() ,item);
-            newsList.add(tempNews);
-            System.out.println("news title: \t"+tempNews.getTitle());
-            System.out.println("news author: \t"+tempNews.getAuthor());
-            System.out.println("news link: \t"+tempNews.getLink());
-            System.out.println("news date: \t"+tempNews.getDate());
-            System.out.println("news content: \t"+tempNews.getContent());
+            tempNews.setSite(RSSAddress);
+            newsManager.add(tempNews.getTitle(), tempNews.getDate(), tempNews.getAuthor(), tempNews.getLink(), tempNews.getContent(), tempNews.getSite());
+
         }
-        return newsList;
     }
 
     @Override
     public void run() {
         ConfigManager configManager= ConfigManager.getInstance();
         int id =1;
-        while (true){
-//            String RSSLink =configManager.getRSS(id);
-//            scrape(RSSLink);
-            id++;
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        while (true){
+           // String RSSLink =configManager.getRSS(id);
+        scrape();
+        Lock readLock = lock.readLock();
+        readLock.lock();
+        //System.out.println("finish");
+        readLock.unlock();
+//            id++;
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
+
     public void start() {
-        thread= new Thread(this,"IOThread");
+        thread= new Thread(this,"ScrapThread");
         thread.start();
     }
 }

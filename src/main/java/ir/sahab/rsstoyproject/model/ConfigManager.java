@@ -16,35 +16,35 @@ public class ConfigManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//        createDatabase();
-//        this.TableDeclaration = "TEMPLATE(site varchar(50), contentClass varchar(50)), primary key (contentClass));";
-//        this.TableName = "Template";
-//        createTable();
     }
+
     private ConfigManager(){}
+
     public static ConfigManager getInstance(String user, String password) {
         if (instance == null) {
             instance = new ConfigManager(user, password);
         }
         return instance;
     }
+
     public static ConfigManager getInstance() {
         if (instance == null) {
             instance = new ConfigManager();
         }
         return instance;
     }
+
     public void addConfig(String site, String contentClass){
         try {
             PreparedStatement DatabaseStatement = DatabaseConnector.prepareStatement("insert into Config values(?, ?);");
             DatabaseStatement.setString(1, site);
             DatabaseStatement.setString(2, contentClass);
             DatabaseStatement.executeUpdate();
-            DatabaseConnector.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
     public String getConfig(String site) {
         try {
             PreparedStatement query = DatabaseConnector.prepareStatement("select * from Config where site = ?");

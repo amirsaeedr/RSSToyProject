@@ -6,10 +6,9 @@ import ir.sahab.rsstoyproject.model.ConfigManager;
 import java.sql.*;
 
 public class ConfigController {
-    private ConfigManager manager = ConfigManager.getInstance();
+    private ConfigManager configmanager = ConfigManager.getInstance();
     public String getConfig(String site) {
-        String config = manager.getConfig(site);
-        System.out.println(config);
+        String config = configmanager.getConfig(site);
         return config;
     }
     public String findConfig(Document news){

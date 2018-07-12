@@ -1,7 +1,6 @@
 package ir.sahab.rsstoyproject;
 import ir.sahab.rsstoyproject.Controller.IOController;
 import ir.sahab.rsstoyproject.Controller.Scraper;
-import ir.sahab.rsstoyproject.Controller.ConfigController;
 import ir.sahab.rsstoyproject.model.NewsManager;
 import ir.sahab.rsstoyproject.model.ConfigManager;
 
@@ -11,20 +10,14 @@ import ir.sahab.rsstoyproject.model.ConfigManager;
  */
 public class App
 {
-    public static void main( String[] args )
-    {
+    public static void main( String[] args ) {
         String databasePassword = "1375109";
         String user = "root";
+        NewsManager newsManager = NewsManager.getInstance(user, databasePassword);
+        ConfigManager configManger = ConfigManager.getInstance(user,databasePassword);
         Scraper RSSReader = new Scraper();
         IOController ioController = new IOController();
-//        ConfigManager templateManger = ConfigManager.getInstance(user,databasePassword);
-//        NewsManager newsManager = NewsManager.getInstance(user, databasePassword);
         ioController.start();
         RSSReader.start();
-////        newsManager.add("test", "1 June 1998", "A", "nothing3", "content");
-//        String URL = "https://www.farsnews.com/rss";
-//        //RSSReader.start(URL);
-//        ConfigController configController = new ConfigController();
-//        configController.getConfig("fars");
     }
 }
