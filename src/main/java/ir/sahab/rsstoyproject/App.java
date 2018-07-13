@@ -13,12 +13,8 @@ import java.util.ArrayList;
 public class App
 {
     public static void main( String[] args ) {
-        String databasePassword = "li24v2hk77";
-        String user = "root";
-        NewsManager newsManager = NewsManager.getInstance(user, databasePassword);
-        ConfigManager configManger = ConfigManager.getInstance(user,databasePassword);
-        Scraper RSSReader = new Scraper();
         IOController ioController = new IOController();
+        Scraper RSSReader = new Scraper();
         ioController.start();
         RSSReader.start();
     }

@@ -7,9 +7,10 @@ public class ConfigManager {
     private static String password;
     private static String user;
     private static ConfigManager instance;
-    Connection DatabaseConnector;
-
+    private Connection DatabaseConnector;
+    ArrayList<String> URLs ;
     private ConfigManager(String user, String password) {
+        URLs = new ArrayList<>();
         this.user = user;
         this.password = password;
         try {
@@ -41,6 +42,7 @@ public class ConfigManager {
             DatabaseStatement.setString(1, site);
             DatabaseStatement.setString(2, contentClass);
             DatabaseStatement.executeUpdate();
+            URLs.add(site);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -62,7 +64,6 @@ public class ConfigManager {
     }
 
     public ArrayList<String> getURLs(){
-        ArrayList<String> URLs = new ArrayList<>();
         try {
             PreparedStatement query = DatabaseConnector.prepareStatement("select * from Config");
             ResultSet queryResult = query.executeQuery();

@@ -1,5 +1,8 @@
 package ir.sahab.rsstoyproject.Controller;
 
+import ir.sahab.rsstoyproject.model.ConfigManager;
+import ir.sahab.rsstoyproject.model.NewsManager;
+
 import java.util.Scanner;
 
 public class IOController implements Runnable{
@@ -17,6 +20,8 @@ public class IOController implements Runnable{
     private final static int FIRST = 0;
     private final static int SECOND = 1;
     private final static int LAST = 2;
+    private ConfigManager configManger;
+    private NewsManager newsManager;
     private void showHelp(){
         System.out.println(HELP+"\tshows help menu");
         System.out.println(GET+"\t[option] [webSiteName] you can set "+TOP+" as option to get top 10 news of web site ,"
@@ -27,10 +32,19 @@ public class IOController implements Runnable{
 
     }
     public IOController() {
-         input = new Scanner(System.in);
+        String databasePassword ;
+        String user ;
+        input = new Scanner(System.in);
+        System.out.println("welcome to RSSReader");
+        System.out.print("please enter your sql user name ->");
+        user = input.nextLine();
+        System.out.print("please enter your sql password ->");
+        databasePassword = input.nextLine();
+        newsManager = NewsManager.getInstance(user, databasePassword);
+        configManger = ConfigManager.getInstance(user,databasePassword);
     }
-
     private void read(){
+        String query;
         String commandParts[];
         while (true){
             String command;
@@ -40,10 +54,13 @@ public class IOController implements Runnable{
             if (commandParts[FIRST].equals(HELP))
                 showHelp();
             else if (commandParts[FIRST].equals(ADD)&&commandParts.length==3){
-                    System.out.println(ADD+"  "+commandParts[SECOND]+" "+commandParts[LAST]);
+                configManger.addConfig(commandParts[SECOND],commandParts[LAST]);
+                System.out.println("Config added");
             }
             else if (commandParts[FIRST].equals(GET)&&commandParts.length==3){
                 if (commandParts[SECOND].equals(TOP)){
+                    query = "select distinct * from News limit 10;";
+                    newsManager.get(query);
                     System.out.println(GET+" "+TOP +" "+commandParts[LAST]);
                 }
                 else if (commandParts[SECOND].equals(COUNT)){

@@ -88,6 +88,11 @@ public class Scraper implements Runnable{
             getNewsContent(tempNews,tempNews.getLink() ,item);
             tempNews.setSite(RSSAddress);
             newsManager.add(tempNews.getTitle(), tempNews.getDate(), tempNews.getAuthor(), tempNews.getLink(), tempNews.getContent(), tempNews.getSite());
+            try {
+                thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
         }
     }
@@ -96,8 +101,8 @@ public class Scraper implements Runnable{
     public void run() {
         ConfigManager configManager= ConfigManager.getInstance();
         ArrayList<String> links = configManager.getURLs();
-        for (String link:links) {
-            scrape(link);
+        for (int i =0;i<links.size();i++) {
+            scrape(links.get(i));
         }
         System.out.println("done");
     }
