@@ -101,10 +101,11 @@ public class Scraper implements Runnable{
     public void run() {
         ConfigManager configManager= ConfigManager.getInstance();
         ArrayList<String> links = configManager.getURLs();
-        for (int i =0;i<links.size();i++) {
-            scrape(links.get(i));
+        while(true) {
+            for (int i = 0; i < links.size(); i++) {
+                scrape(links.get(i));
+            }
         }
-        System.out.println("done");
     }
 
     public void start() {

@@ -1,5 +1,7 @@
 package ir.sahab.rsstoyproject.model;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -43,6 +45,8 @@ public class ConfigManager {
             DatabaseStatement.setString(2, contentClass);
             DatabaseStatement.executeUpdate();
             URLs.add(site);
+        } catch (MySQLIntegrityConstraintViolationException e){
+            return;
         } catch (SQLException e) {
             e.printStackTrace();
         }

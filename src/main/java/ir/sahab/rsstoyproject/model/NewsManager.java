@@ -1,6 +1,9 @@
 package ir.sahab.rsstoyproject.model;
 
 
+import com.mysql.jdbc.MysqlDataTruncation;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
 import java.sql.*;
 
 public class NewsManager {
@@ -38,7 +41,7 @@ public class NewsManager {
 
     public synchronized void add(String title, String date, String author, String link, String content, String site){
         try {
-            PreparedStatement DatabaseStatement = databaseConnector.prepareStatement("insert into News values(?, ?, ?, ?, ?, ?);");
+            PreparedStatement DatabaseStatement = databaseConnector.prepareStatement("insert into News(title, date, author, link, content, site) values(?, ?, ?, ?, ?, ?);");
             DatabaseStatement.setString(1, title);
             DatabaseStatement.setString(2, date);
             DatabaseStatement.setString(3, author);
@@ -46,7 +49,10 @@ public class NewsManager {
             DatabaseStatement.setString(5, content);
             DatabaseStatement.setString(6, site);
             DatabaseStatement.executeUpdate();
-        } catch (SQLException e) {
+        } catch (MySQLIntegrityConstraintViolationException e){
+            return;
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
     }
