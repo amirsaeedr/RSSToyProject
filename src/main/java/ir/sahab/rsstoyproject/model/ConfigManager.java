@@ -9,14 +9,14 @@ public class ConfigManager {
     private static String password;
     private static String user;
     private static ConfigManager instance;
-    private Connection DatabaseConnector;
+    private Connection databaseConnector;
     ArrayList<String> URLs ;
     private ConfigManager(String user, String password) {
         URLs = new ArrayList<>();
         this.user = user;
         this.password = password;
         try {
-            DatabaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase", user, password);
+            databaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase", user, password);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -40,10 +40,11 @@ public class ConfigManager {
 
     public void addConfig(String site, String contentClass){
         try {
-            PreparedStatement DatabaseStatement = DatabaseConnector.prepareStatement("insert into Config values(?, ?);");
-            DatabaseStatement.setString(1, site);
-            DatabaseStatement.setString(2, contentClass);
-            DatabaseStatement.executeUpdate();
+            PreparedStatement databaseStatement = databaseConnector.prepareStatement("insert into Config values(?, ? , ?);");
+            databaseStatement.setString(1, site);
+            databaseStatement.setString(2, contentClass);
+            databaseStatement.setString(3,site.split("/")[2]);
+            databaseStatement.executeUpdate();
             URLs.add(site);
         } catch (MySQLIntegrityConstraintViolationException e){
             return;
@@ -54,13 +55,13 @@ public class ConfigManager {
 
     public String getConfig(String site) {
         try {
-            PreparedStatement query = DatabaseConnector.prepareStatement("select * from Config where site = ?");
+            PreparedStatement query = databaseConnector.prepareStatement("select * from Config where RSSlink = ?");
             query.setString(1, site);
             ResultSet queryResult = query.executeQuery();
             while (queryResult.next()) {
                 return queryResult.getString("contentClass");
             }
-            DatabaseConnector.close();
+            databaseConnector.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -69,10 +70,10 @@ public class ConfigManager {
 
     public ArrayList<String> getURLs(){
         try {
-            PreparedStatement query = DatabaseConnector.prepareStatement("select * from Config");
+            PreparedStatement query = databaseConnector.prepareStatement("select * from Config");
             ResultSet queryResult = query.executeQuery();
             while (queryResult.next()) {
-                URLs.add(queryResult.getString("site"));
+                URLs.add(queryResult.getString("RSSLink"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

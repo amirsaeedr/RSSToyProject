@@ -59,9 +59,8 @@ public class IOController implements Runnable{
             }
             else if (commandParts[FIRST].equals(GET)&&commandParts.length==3){
                 if (commandParts[SECOND].equals(TOP)){
-                    query = "select distinct * from News limit 10;";
+                    query = "select distinct * from News where site=\""+commandParts[LAST]+"\" limit 10;";
                     newsManager.get(query);
-                    System.out.println(GET+" "+TOP +" "+commandParts[LAST]);
                 }
                 else if (commandParts[SECOND].equals(COUNT)){
                     System.out.println(GET+" "+COUNT +" "+commandParts[LAST]);

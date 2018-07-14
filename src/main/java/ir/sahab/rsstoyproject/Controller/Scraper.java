@@ -31,6 +31,10 @@ public class Scraper implements Runnable{
         getNewsList();
     }
 
+    private void getNewsSite(News news){
+        String site = RSSAddress.split("/")[2];
+        news.setSite(site);
+    }
     private void getNewsTitle(News news, Element item){
         String title=item.select("title").html();
         news.setTitle(title);
@@ -86,7 +90,7 @@ public class Scraper implements Runnable{
             getNewsDate(tempNews,item);
             getNewsLink(tempNews,item);
             getNewsContent(tempNews,tempNews.getLink() ,item);
-            tempNews.setSite(RSSAddress);
+            getNewsSite(tempNews);
             newsManager.add(tempNews.getTitle(), tempNews.getDate(), tempNews.getAuthor(), tempNews.getLink(), tempNews.getContent(), tempNews.getSite());
             try {
                 thread.sleep(100);
