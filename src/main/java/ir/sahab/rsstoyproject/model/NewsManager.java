@@ -15,7 +15,7 @@ public class NewsManager {
         this.user = user;
         this.password = password;
         try {
-            databaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSS_Database", user, password);
+            databaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase", user, password);
             databaseStatement = databaseConnector.createStatement();
         } catch (SQLException e) {
             e.printStackTrace();

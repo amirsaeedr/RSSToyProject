@@ -14,7 +14,7 @@ public class ConfigManager {
         this.user = user;
         this.password = password;
         try {
-            DatabaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSS_Database", user, password);
+            DatabaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase", user, password);
         } catch (SQLException e) {
             e.printStackTrace();
         }

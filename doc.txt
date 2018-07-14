@@ -1,10 +1,28 @@
 Initial Database Setup:
+First of all in order to enable saving Persian strings do the following:
+1. run this in terminal: sudo gedit /etc/mysql/my.cnf
+2. at the end of the file copy the string below:
+[client]
+default-character-set=utf8
+
+[mysql]
+default-character-set=utf8
+
+
+[mysqld]
+collation-server = utf8_unicode_ci
+init-connect='SET NAMES utf8'
+character-set-server = utf8
 log in to your mySQL and run the SQL codes below:
 
-create database RSS_Database
-use RSS_Data base
+3. sudo /etc/init.d/mysql sto run the codes below:
+4. sudo /etc/init.d/mysql restart
+****
+Now log in your mySQL and:
+CREATE DATABASE RSSDatabase CHARACTER SET utf8 COLLATE utf8_general_ci;
+use RSSDatabase
 create table if not exists Config(site varchar(50), contentClass varchar(50), primary key(site));
-create table if not exists News(title varchar(1000) not null, date varchar(50) not null, author varchar(50), link varchar(300) not null , content varchar(50000),site varchar(50), primary key (link));
+create table if not exists News(title varchar(1000) not null, date varchar(50) not null, author varchar(50), link varchar(300) not null , content varchar(20000),site varchar(50), primary key (link));
 insert into Config values("http://www.tabnak.ir/fa/rss/allnews", "body");
 insert into Config values("https://www.farsnews.com/rss", "rtejustify");
 insert into Config values("https://www.mashreghnews.ir/rss", "item-text");
