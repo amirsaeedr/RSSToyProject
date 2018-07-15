@@ -1,17 +1,17 @@
-package ir.sahab.rsstoyproject.model;
+package ir.sahab.rsstoyproject.news;
+
+import java.util.Date;
 
 public class News {
     private String title;
-    private String date;
-    private String author;
+    private Date date;
     private String link;
     private String content;
     private String site;
 
-    public News(String title, String date, String author, String link, String content, String site) {
+    public News(String title, Date date, String link, String content, String site) {
         this.title = title;
         this.date = date;
-        this.author = author;
         this.link = link;
         this.content = content;
         this.site = site;
@@ -32,20 +32,12 @@ public class News {
         this.title = title;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
     }
 
     public String getLink() {

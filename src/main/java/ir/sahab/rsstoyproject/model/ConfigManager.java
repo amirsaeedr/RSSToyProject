@@ -16,7 +16,7 @@ public class ConfigManager {
         this.user = user;
         this.password = password;
         try {
-            databaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase", user, password);
+            databaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase?useUnicode=yes&characterEncoding=UTF-8", user, password);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -60,6 +60,21 @@ public class ConfigManager {
             ResultSet queryResult = query.executeQuery();
             while (queryResult.next()) {
                 return queryResult.getString("contentClass");
+            }
+            databaseConnector.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getDateFormat(String site) {
+        try {
+            PreparedStatement query = databaseConnector.prepareStatement("select * from Config where RSSlink = ?");
+            query.setString(1, site);
+            ResultSet queryResult = query.executeQuery();
+            while (queryResult.next()) {
+                return queryResult.getString("dateFormat");
             }
             databaseConnector.close();
         } catch (SQLException e) {

@@ -15,4 +15,13 @@ public class ConfigController {
 
         return null;
     }
+
+    public String getDateFormat(String site) {
+        String dateFormat = configmanager.getDateFormat(site);
+        return dateFormat;
+    }
+    public String findDateFormat(Document news){
+
+        return null;
+    }
 }

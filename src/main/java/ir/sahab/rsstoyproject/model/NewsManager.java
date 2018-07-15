@@ -8,17 +8,13 @@ import java.sql.*;
 
 public class NewsManager {
     private static NewsManager instance;
-    private static String password;
-    private static String user;
     private Connection databaseConnector;
     private Statement databaseStatement;
     private NewsManager (){}
 
     private NewsManager(String user, String password) {
-        this.user = user;
-        this.password = password;
         try {
-            databaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase", user, password);
+            databaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase?useUnicode=yes&characterEncoding=UTF-8", user, password);
             databaseStatement = databaseConnector.createStatement();
         } catch (SQLException e) {
             e.printStackTrace();

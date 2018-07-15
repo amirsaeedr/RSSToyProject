@@ -1,0 +1,16 @@
+packages
+==?????
+valid URL for News Agency
+Naming Convention
+yellow parts of IntellIJ
+packaging
+Config name??
+Apache for Console
+log 4j
+exception
+Design Pattern
+link primary key??
+switch case instead of if else
+(DONE)	create UTF-8 in connection
+class cohesion : each class only one task
+class coupling: the least communication between classes
