@@ -45,21 +45,21 @@ public class NewsDaoImp implements NewsDao {
     }
 
     @Override
-    public void addNews(News news) {
+    public boolean addNews(News news) {
         try {
             PreparedStatement databaseStatement = databaseConnector.prepareStatement("insert into News(title, date, link, content, site) values(?, ?, ?, ?, ?);");
             databaseStatement.setString(1, news.getTitle());
             databaseStatement.setTimestamp(2, new java.sql.Timestamp(news.getDate().getTime()));
             databaseStatement.setString(3, news.getLink());
             databaseStatement.setString(4, news.getContent());
-            databaseStatement.setString(5, news.getSite());
-//            databaseStatement.setInt(6, news.getID());
+//            databaseStatement.setString(5, news.getSite());
             databaseStatement.executeUpdate();
         } catch (MySQLIntegrityConstraintViolationException e) {
-            return;
+            return false;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return true;
     }
 
 
@@ -78,11 +78,6 @@ public class NewsDaoImp implements NewsDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
-    }
-
-    @Override
-    public ResultSet get(String query) {
         return null;
     }
 
@@ -124,9 +119,7 @@ public class NewsDaoImp implements NewsDao {
             }
         } catch (MySQLIntegrityConstraintViolationException e) {
             return null;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
+        } catch (SQLException | ParseException e) {
             e.printStackTrace();
         }
         return titles;

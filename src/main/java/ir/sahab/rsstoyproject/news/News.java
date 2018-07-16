@@ -7,16 +7,16 @@ public class News {
     private Date date;
     private String link;
     private String content;
-    private String site;
-    private int ID;
+    private int siteId;
+    private int newsId;
 
-    public News(String title, Date date, String link, String content, String site, int ID) {
+    public News(String title, Date date, String link, String content, int siteId, int newsId) {
         this.title = title;
         this.date = date;
         this.link = link;
         this.content = content;
-        this.site = site;
-        this.ID = ID;
+        this.siteId = siteId;
+        this.newsId = newsId;
     }
 
     public News() {
@@ -58,11 +58,11 @@ public class News {
         this.content = content;
     }
 
-    public String getSite() { return site; }
+    public int getSiteId() { return siteId; }
 
-    public void setSite(String site) { this.site = site; }
+    public void setSite(int siteId) { this.siteId = siteId; }
 
-    public int getID() { return ID; }
+    public int getNewsId() { return newsId; }
 
-    public void setID(int ID) { this.ID = ID; }
+    public void setNewsID(int newsId) { this.newsId = newsId; }
 }
