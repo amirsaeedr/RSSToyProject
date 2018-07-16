@@ -4,8 +4,12 @@ import java.util.ArrayList;
 
 public interface SiteDao {
     String getPattern(String RSSLink);
+
     String getDateFormat(String site);
+
     ArrayList<String> getURLs();
-    void addSite(Site site);
+
+    void addSite(String siteURL, String pattern, String datePattern);
+
     String findPattern(String RSSLink);
 }

@@ -47,13 +47,13 @@ public class NewsDaoImp implements NewsDao {
     @Override
     public void addNews(News news) {
         try {
-            PreparedStatement databaseStatement = databaseConnector.prepareStatement("insert into News(title, date, link, content, site, ID) values(?, ?, ?, ?, ?, ?);");
+            PreparedStatement databaseStatement = databaseConnector.prepareStatement("insert into News(title, date, link, content, site) values(?, ?, ?, ?, ?);");
             databaseStatement.setString(1, news.getTitle());
             databaseStatement.setTimestamp(2, new java.sql.Timestamp(news.getDate().getTime()));
             databaseStatement.setString(3, news.getLink());
             databaseStatement.setString(4, news.getContent());
             databaseStatement.setString(5, news.getSite());
-            databaseStatement.setInt(6, news.getID());
+//            databaseStatement.setInt(6, news.getID());
             databaseStatement.executeUpdate();
         } catch (MySQLIntegrityConstraintViolationException e) {
             return;
@@ -64,17 +64,15 @@ public class NewsDaoImp implements NewsDao {
 
 
     @Override
-    public ArrayList<News> search(String field, String text) {
+    public ArrayList<String> search(String field, String text) {
         try {
-            ArrayList<News> result = new ArrayList<>();
-            PreparedStatement databaseStatement = databaseConnector.prepareStatement("select * from News where ? like %?%;");
+            ArrayList<String> result = new ArrayList<>();
+            PreparedStatement databaseStatement = databaseConnector.prepareStatement("select title from News where ? like %?%;");
             databaseStatement.setString(1, field);
             databaseStatement.setString(2, text);
             ResultSet queryResult = databaseStatement.executeQuery();
             while (queryResult.next()) {
-                News tmpNews = new News(queryResult.getString("title"), queryResult.getTimestamp("date"),
-                        queryResult.getString("link"), queryResult.getString("content"), queryResult.getString("site"), queryResult.getInt("ID"));
-                result.add(tmpNews);
+                result.add(queryResult.getString("title"));
             }
             return result;
         } catch (SQLException e) {
@@ -92,10 +90,11 @@ public class NewsDaoImp implements NewsDao {
     public ArrayList<String> getLatestNews(String siteName) {
         ArrayList<String> titles = new ArrayList<>();
         try {
-            PreparedStatement DatabaseStatement = databaseConnector.prepareStatement("select title from News where site = ? order by date desc limit 10;");
-            DatabaseStatement.setString(1, siteName);
-            ResultSet resultSet = DatabaseStatement.executeQuery();
+            PreparedStatement databaseStatement = databaseConnector.prepareStatement("select title from News where site = ? order by date desc limit 10;");
+            databaseStatement.setString(1, siteName);
+            ResultSet resultSet = databaseStatement.executeQuery();
             while (resultSet.next()) {
+                System.out.println(resultSet.getString("title"));
                 titles.add(resultSet.getString("title"));
             }
         } catch (MySQLIntegrityConstraintViolationException e) {
@@ -115,11 +114,11 @@ public class NewsDaoImp implements NewsDao {
             cal.setTime(standardFormat.parse(date));
             cal.add(Calendar.DATE, length);
             String lastDay = standardFormat.format(cal.getTime());
-            PreparedStatement DatabaseStatement = databaseConnector.prepareStatement("select title from News where site = ? and date > ? and date < ?;");
-            DatabaseStatement.setString(1, siteName);
-            DatabaseStatement.setString(2, date);
-            DatabaseStatement.setString(3, lastDay);
-            ResultSet resultSet = DatabaseStatement.executeQuery();
+            PreparedStatement databaseStatement = databaseConnector.prepareStatement("select title from News where site = ? and date > ? and date < ?;");
+            databaseStatement.setString(1, siteName);
+            databaseStatement.setString(2, date);
+            databaseStatement.setString(3, lastDay);
+            ResultSet resultSet = databaseStatement.executeQuery();
             while (resultSet.next()) {
                 titles.add(resultSet.getString("title"));
             }

@@ -1,6 +1,7 @@
 package ir.sahab.rsstoyproject;
 //import ir.sahab.rsstoyproject.Controller.IOController;
 
+import ir.sahab.rsstoyproject.console.ConsoleHandler;
 import ir.sahab.rsstoyproject.news.NewsDao;
 import ir.sahab.rsstoyproject.news.NewsDaoImp;
 import ir.sahab.rsstoyproject.scraper.Scraper;
@@ -15,7 +16,10 @@ import java.util.Date;
  */
 public class App {
     public static void main(String[] args) {
-        Scraper RSSReader = new Scraper();
-        RSSReader.start();
+
+//        Scraper RSSReader = new Scraper();
+//        RSSReader.start();
+        ConsoleHandler consoleHandler = new ConsoleHandler();
+        consoleHandler.run();
     }
 }
