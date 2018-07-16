@@ -8,13 +8,15 @@ public class News {
     private String link;
     private String content;
     private String site;
+    private int ID;
 
-    public News(String title, Date date, String link, String content, String site) {
+    public News(String title, Date date, String link, String content, String site, int ID) {
         this.title = title;
         this.date = date;
         this.link = link;
         this.content = content;
         this.site = site;
+        this.ID = ID;
     }
 
     public News() {
@@ -59,4 +61,8 @@ public class News {
     public String getSite() { return site; }
 
     public void setSite(String site) { this.site = site; }
+
+    public int getID() { return ID; }
+
+    public void setID(int ID) { this.ID = ID; }
 }

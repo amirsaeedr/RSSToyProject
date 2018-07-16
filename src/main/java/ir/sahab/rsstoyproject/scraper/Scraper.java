@@ -51,13 +51,15 @@ public class Scraper implements Runnable {
         String site = null;
         String newsLink = null;
         Date date = null;
+        int ID = 0;
         for (Element item : items) {
             title = getNewsTitle(item);
             date = getNewsDate(item);
             newsLink = getNewsLink(item);
             content = getNewsContent(newsLink);
             site = getNewsSite();
-            News news = new News(title, date, newsLink, content, site);
+            ID = newsLink.hashCode();
+            News news = new News(title, date, newsLink, content, site, ID);
             newsDao.addNews(news);
             try {
                 thread.sleep(100);
@@ -92,8 +94,7 @@ public class Scraper implements Runnable {
         String formatString = getDateFormat(RSSAddress);
         SimpleDateFormat format = new SimpleDateFormat(formatString);
         try {
-//            return format.parse(dateString);
-            return format.parse("MM dd, yyyy");
+            return format.parse(dateString);
         } catch (ParseException e) {
             //TODO
             e.printStackTrace();
@@ -114,6 +115,7 @@ public class Scraper implements Runnable {
         try {
             contentDoc = Jsoup.connect(newsLink).get();
         } catch (IOException e) {
+            System.out.println("Couldn't load " + newsLink);
             e.printStackTrace();
         }
     }
