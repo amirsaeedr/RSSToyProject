@@ -21,11 +21,11 @@ Now run the codes below:
 log in to your mySQL and run the SQL codes below
 CREATE DATABASE RSSDatabase CHARACTER SET utf8 COLLATE utf8_general_ci;
 use RSSDatabase;
-create table if not exists Config(RSSLink varchar(50), contentClass varchar(50),site varchar(50), dateFormat varchar(50), primary key(RSSLink));
-create table if not exists News(title varchar(1000) not null, date varchar(50) not null, author varchar(50), link varchar(300) not null , content text, site varchar(50), primary key (link));
-insert into Config values("http://www.tabnak.ir/fa/rss/allnews", "body","www.tabnak.ir", "dd MMM yyyy HH:mm:ss");
-insert into Config values("https://www.farsnews.com/rss", "rtejustify","www.farsnews.com", "E, dd MMM yyyy HH:mm:ss");
-insert into Config values("https://www.mashreghnews.ir/rss", "item-text","www.mashreghnews.ir", "E, dd MMM yyyy HH:mm:ss");
+create table if not exists Site(RSSLink varchar(50), contentClass varchar(50),site varchar(50), dateFormat varchar(50), primary key(RSSLink));
+create table if not exists News(title varchar(1000) not null, date timestamp, link varchar(300) not null , content text, site varchar(50), primary key (link));
+insert into Site values("http://www.tabnak.ir/fa/rss/allnews", "body","www.tabnak.ir", "dd MMM yyyy HH:mm:ss");
+insert into Site values("https://www.farsnews.com/rss", "rtejustify","www.farsnews.com", "E, dd MMM yyyy HH:mm:ss");
+insert into Site values("https://www.mashreghnews.ir/rss", "item-text","www.mashreghnews.ir", "E, dd MMM yyyy HH:mm:ss");
 
 
 

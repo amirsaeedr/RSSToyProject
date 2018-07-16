@@ -1,12 +1,8 @@
 package ir.sahab.rsstoyproject.news;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-import ir.sahab.rsstoyproject.model.NewsManager;
-import ir.sahab.rsstoyproject.query.AddNews;
-import ir.sahab.rsstoyproject.query.QueryBuilder;
 
 import java.sql.*;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +12,7 @@ public class NewsDaoImp implements NewsDao {
     private Statement databaseStatement;
     private NewsDaoImp(){}
 
-    private NewsDaoImp(String user, String password) {
+    public NewsDaoImp(String user, String password) {
         try {
             databaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase?useUnicode=yes&characterEncoding=UTF-8", user, password);
             databaseStatement = databaseConnector.createStatement();
@@ -44,12 +40,15 @@ public class NewsDaoImp implements NewsDao {
     }
 
     @Override
-    public void addNews(String title, Date date, String link, String content, String site) {
+    public void addNews(News news) {
         try {
-            News news = new News(title, date, link, content, site);
-            AddNews addNewsImp = new QueryBuilder();
-            Statement DatabaseStatement = databaseConnector.createStatement();
-            DatabaseStatement.executeUpdate(addNewsImp.addNewsQuery(news));
+            PreparedStatement DatabaseStatement = databaseConnector.prepareStatement("insert into News(title, date, link, content, site) values(?, ?, ?, ?, ?);");
+            DatabaseStatement.setString(1, news.getTitle());
+            DatabaseStatement.setTimestamp(2, new java.sql.Timestamp(news.getDate().getTime()));
+            DatabaseStatement.setString(3, news.getLink());
+            DatabaseStatement.setString(4, news.getContent());
+            DatabaseStatement.setString(5, news.getSite());
+            DatabaseStatement.executeUpdate();
         } catch (MySQLIntegrityConstraintViolationException e){
             return;
         }
@@ -58,5 +57,21 @@ public class NewsDaoImp implements NewsDao {
         }
 
 
+    }
+
+    //fixme
+    @Override
+    synchronized public ResultSet get(String query) {
+        try {
+            ResultSet queryResult = databaseStatement.executeQuery(query);
+            queryResult =databaseStatement.getResultSet();
+            while (queryResult.next()){
+                System.out.println(queryResult.getString(1));
+            }
+            return queryResult;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

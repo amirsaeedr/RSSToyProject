@@ -1,9 +1,10 @@
 package ir.sahab.rsstoyproject.scraper;
 
-import ir.sahab.rsstoyproject.Controller.ConfigController;
 import ir.sahab.rsstoyproject.news.News;
-import ir.sahab.rsstoyproject.service.NewsService;
-import ir.sahab.rsstoyproject.service.SiteService;
+import ir.sahab.rsstoyproject.news.NewsDao;
+import ir.sahab.rsstoyproject.news.NewsDaoImp;
+import ir.sahab.rsstoyproject.site.SiteDao;
+import ir.sahab.rsstoyproject.site.SiteDaoImp;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,24 +13,30 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Scraper implements Runnable {
-    private NewsService newsService;
-    private SiteService siteService;
     private Document contentDoc = null;
     private Document RSSDoc = null;
     private Thread thread;
     private String RSSAddress;
+    private NewsDao newsDao;
+    private SiteDao siteDao;
 
     public Scraper() {
-        newsService = new NewsService();
-        siteService = new SiteService();
+        newsDao = NewsDaoImp.getInstance("root", "li24v2hk77");
+        siteDao = SiteDaoImp.getInstance("root", "li24v2hk77");
     }
 
     @Override
     public void run() {
-
+        while(true){
+            ArrayList<String> URLs = siteDao.getURLs();
+            for(String URL: URLs){
+                scrape(URL);
+            }
+        }
     }
 
     public void start() {
@@ -48,9 +55,10 @@ public class Scraper implements Runnable {
             title = getNewsTitle(item);
             date = getNewsDate(item);
             newsLink = getNewsLink(item);
-            content = getNewsContent(newsLink, item);
+            content = getNewsContent(newsLink);
             site = getNewsSite();
-            newsService.addNews(title, date, newsLink, content, site);
+            News news = new News(title, date, newsLink, content, site);
+            newsDao.addNews(news);
             try {
                 thread.sleep(100);
             } catch (InterruptedException e) {
@@ -84,7 +92,8 @@ public class Scraper implements Runnable {
         String formatString = getDateFormat(RSSAddress);
         SimpleDateFormat format = new SimpleDateFormat(formatString);
         try {
-            return format.parse(dateString);
+//            return format.parse(dateString);
+            return format.parse("MM dd, yyyy");
         } catch (ParseException e) {
             //TODO
             e.printStackTrace();
@@ -96,8 +105,7 @@ public class Scraper implements Runnable {
         return item.select("link").html();
     }
 
-    private String getNewsContent(String newsLink, Element item) {
-        String content;
+    private String getNewsContent(String newsLink) {
         String contentClass = getContentClass(newsLink);
         return contentDoc.getElementsByClass(contentClass).text();
     }
@@ -111,25 +119,22 @@ public class Scraper implements Runnable {
     }
 
     private String getContentClass(String newsLink) {
-//        getContentDocument(newsLink);
-//        ConfigController configController = new ConfigController();
-//        String contentClass = configController.getConfig(RSSAddress);
+        getContentDocument(newsLink);
+        String contentClass = siteDao.getPattern(RSSAddress);
 //        if (contentClass == null || contentClass.isEmpty()) {
 //            contentClass = configController.findConfig(contentDoc);
 //        }
         //TODO
-        return null;
+        return contentClass;
     }
 
-    private String getDateFormat(String newsLink) {
-//        getContentDocument(newsLink);
-//        ConfigController configController = new ConfigController();
-//        String contentClass = configController.getDateFormat(RSSAddress);
-//        if (contentClass == null || contentClass.isEmpty()) {
-//            contentClass = configController.findDateFormat(contentDoc);
-//        }
+    private String getDateFormat(String RSSAddress) {
+        String dateFormat = siteDao.getDateFormat(RSSAddress);
+        if (dateFormat == null || dateFormat.isEmpty()) {
+//            dateFormat = siteDao.findDateFormat(RSSAddress);
+        }
         //TODO
-        return null;
+        return dateFormat;
     }
 
 }
