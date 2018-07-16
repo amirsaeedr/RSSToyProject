@@ -16,6 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static java.lang.Thread.*;
+
 public class Scraper implements Runnable {
     private Document contentDoc = null;
     private Document RSSDoc = null;
@@ -25,8 +27,8 @@ public class Scraper implements Runnable {
     private SiteDao siteDao;
 
     public Scraper() {
-        newsDao = NewsDaoImp.getInstance("root", "1375109");
-        siteDao = SiteDaoImp.getInstance("root", "1375109");
+        newsDao = NewsDaoImp.getInstance("root", "li24v2hk77");
+        siteDao = SiteDaoImp.getInstance("root", "li24v2hk77");
     }
 
     @Override
@@ -59,8 +61,10 @@ public class Scraper implements Runnable {
             content = getNewsContent(newsLink);
             site = getNewsSite();
             ID = newsLink.hashCode();
-            News news = new News(title, date, newsLink, content, site, ID);
-            newsDao.addNews(news);
+            News news = new News(title, date, newsLink, content, site.hashCode(), ID);
+            if(!newsDao.addNews(news)){
+                break;
+            }
             try {
                 thread.sleep(100);
             } catch (InterruptedException e) {

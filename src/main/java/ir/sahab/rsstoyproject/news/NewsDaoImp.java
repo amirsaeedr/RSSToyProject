@@ -45,21 +45,22 @@ public class NewsDaoImp implements NewsDao {
     }
 
     @Override
-    public void addNews(News news) {
+    public boolean addNews(News news) {
         try {
-            PreparedStatement databaseStatement = databaseConnector.prepareStatement("insert into News(title, date, link, content, site, ID) values(?, ?, ?, ?, ?, ?);");
+            PreparedStatement databaseStatement = databaseConnector.prepareStatement("insert into News(title, date, link, content, siteId, newsId) values(?, ?, ?, ?, ?, ?);");
             databaseStatement.setString(1, news.getTitle());
             databaseStatement.setTimestamp(2, new java.sql.Timestamp(news.getDate().getTime()));
             databaseStatement.setString(3, news.getLink());
             databaseStatement.setString(4, news.getContent());
-            databaseStatement.setString(5, news.getSite());
-            databaseStatement.setInt(6, news.getID());
+            databaseStatement.setInt(5, news.getSiteId());
+            databaseStatement.setInt(6, news.getNewsId());
             databaseStatement.executeUpdate();
         } catch (MySQLIntegrityConstraintViolationException e) {
-            return;
+            return false;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return true;
     }
 
 
@@ -73,7 +74,7 @@ public class NewsDaoImp implements NewsDao {
             ResultSet queryResult = databaseStatement.executeQuery();
             while (queryResult.next()) {
                 News tmpNews = new News(queryResult.getString("title"), queryResult.getTimestamp("date"),
-                        queryResult.getString("link"), queryResult.getString("content"), queryResult.getString("site"), queryResult.getInt("ID"));
+                        queryResult.getString("link"), queryResult.getString("content"), queryResult.getInt("siteId"), queryResult.getInt("newsId"));
                 result.add(tmpNews);
             }
             return result;
@@ -84,16 +85,11 @@ public class NewsDaoImp implements NewsDao {
     }
 
     @Override
-    public ResultSet get(String query) {
-        return null;
-    }
-
-    @Override
     public ArrayList<String> getLatestNews(String siteName) {
         ArrayList<String> titles = new ArrayList<>();
         try {
-            PreparedStatement DatabaseStatement = databaseConnector.prepareStatement("select title from News where site = ? order by date desc limit 10;");
-            DatabaseStatement.setString(1, siteName);
+            PreparedStatement DatabaseStatement = databaseConnector.prepareStatement("select title from News where siteId = ? order by date desc limit 10;");
+            DatabaseStatement.setInt(1, siteName.hashCode());
             ResultSet resultSet = DatabaseStatement.executeQuery();
             while (resultSet.next()) {
                 titles.add(resultSet.getString("title"));
@@ -115,8 +111,8 @@ public class NewsDaoImp implements NewsDao {
             cal.setTime(standardFormat.parse(date));
             cal.add(Calendar.DATE, length);
             String lastDay = standardFormat.format(cal.getTime());
-            PreparedStatement DatabaseStatement = databaseConnector.prepareStatement("select title from News where site = ? and date > ? and date < ?;");
-            DatabaseStatement.setString(1, siteName);
+            PreparedStatement DatabaseStatement = databaseConnector.prepareStatement("select title from News where siteId = ? and date > ? and date < ?;");
+            DatabaseStatement.setInt(1, siteName.hashCode());
             DatabaseStatement.setString(2, date);
             DatabaseStatement.setString(3, lastDay);
             ResultSet resultSet = DatabaseStatement.executeQuery();
@@ -125,9 +121,7 @@ public class NewsDaoImp implements NewsDao {
             }
         } catch (MySQLIntegrityConstraintViolationException e) {
             return null;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
+        } catch (SQLException | ParseException e) {
             e.printStackTrace();
         }
         return titles;

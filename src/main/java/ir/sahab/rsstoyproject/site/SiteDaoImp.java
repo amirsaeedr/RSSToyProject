@@ -94,13 +94,14 @@ public class SiteDaoImp implements SiteDao{
     @Override
     public void addSite(Site site) {
         try {
-            PreparedStatement databaseStatement = databaseConnector.prepareStatement("insert into Site(site, contentClass, site, dateFormat) values(?, ? , ?, ?);");
-            databaseStatement.setString(1, site.getRSSLivk());
+            PreparedStatement databaseStatement = databaseConnector.prepareStatement("insert into Site(site, contentClass, site, dateFormat, siteId) values(?, ? , ?, ?, ?);");
+            databaseStatement.setString(1, site.getRSSLink());
             databaseStatement.setString(2, site.getPattern());
             databaseStatement.setString(3,site.getName());
             databaseStatement.setString(4, site.getDateFormat());
+            databaseStatement.setInt(5, site.getName().hashCode());
             databaseStatement.executeUpdate();
-            URLs.add(site.getRSSLivk());
+            URLs.add(site.getRSSLink());
         } catch (MySQLIntegrityConstraintViolationException e){
             return;
         } catch (SQLException e) {

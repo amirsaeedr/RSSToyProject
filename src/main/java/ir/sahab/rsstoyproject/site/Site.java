@@ -4,7 +4,11 @@ public class Site {
     private String name;
     private String pattern;
     private String dateFormat;
-    private String RSSLivk;
+    private String RSSLink;
+
+    private int siteId;
+
+
 
     public void setName(String name) {
         this.name = name;
@@ -18,8 +22,12 @@ public class Site {
         this.dateFormat = dateFormat;
     }
 
-    public void setRSSLivk(String RSSLivk) {
-        this.RSSLivk = RSSLivk;
+    public void setRSSLink(String RSSLink) {
+        this.RSSLink = RSSLink;
+    }
+
+    public void setSiteId(int siteId) {
+        this.siteId = siteId;
     }
 
     public String getName() {
@@ -34,15 +42,17 @@ public class Site {
         return dateFormat;
     }
 
-    public String getRSSLivk() {
-        return RSSLivk;
-    }
+    public String getRSSLink() { return RSSLink; }
 
-    public Site(String name, String pattern, String dateFormat, String rssLivk) {
+
+    public int getSiteId() { return siteId; }
+
+    public Site(String name, String pattern, String dateFormat, String rssLink, int siteId) {
         this.name = name;
         this.pattern = pattern;
         this.dateFormat = dateFormat;
-        RSSLivk = rssLivk;
+        this.RSSLink = rssLink;
+        this.siteId = siteId;
     }
     public Site(){
 
