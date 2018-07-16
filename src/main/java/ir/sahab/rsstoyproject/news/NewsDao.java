@@ -7,7 +7,14 @@ import java.util.List;
 
 public interface NewsDao {
     List<News> getNews();
+
     void addNews(News news);
-//    ResultSet get(String query);
+
     ArrayList<News> search(String field, String text);
+
+    ResultSet get(String query);
+
+    ArrayList<String> getLatestNews(String siteName);
+
+    ArrayList<String> getNewsFromADay(String siteName, String date, int length);
 }

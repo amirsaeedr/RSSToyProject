@@ -25,8 +25,8 @@ public class Scraper implements Runnable {
     private SiteDao siteDao;
 
     public Scraper() {
-        newsDao = NewsDaoImp.getInstance("root", "li24v2hk77");
-        siteDao = SiteDaoImp.getInstance("root", "li24v2hk77");
+        newsDao = NewsDaoImp.getInstance("root", "1375109");
+        siteDao = SiteDaoImp.getInstance("root", "1375109");
     }
 
     @Override

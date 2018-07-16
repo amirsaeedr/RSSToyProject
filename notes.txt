@@ -14,3 +14,4 @@ switch case instead of if else
 (DONE)	create UTF-8 in connection
 class cohesion : each class only one task
 class coupling: the least communication between classes
+Maven directory struct
