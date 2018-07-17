@@ -101,13 +101,13 @@ public class NewsDaoImp implements NewsDao {
     }
 
     @Override
-    public ArrayList<String> getNewsFromADay(String siteName, String date, int length) {
+    public ArrayList<String> getNewsFromADay(String siteName, String date) {
         ArrayList<String> titles = new ArrayList<>();
         try {
             Calendar cal = Calendar.getInstance();
             SimpleDateFormat standardFormat = new SimpleDateFormat("yyyy-MM-dd");
             cal.setTime(standardFormat.parse(date));
-            cal.add(Calendar.DATE, length);
+            cal.add(Calendar.DATE, 1);
             String lastDay = standardFormat.format(cal.getTime());
             PreparedStatement databaseStatement = databaseConnector.prepareStatement("select title from News where site = ? and date > ? and date < ?;");
             databaseStatement.setString(1, siteName);
