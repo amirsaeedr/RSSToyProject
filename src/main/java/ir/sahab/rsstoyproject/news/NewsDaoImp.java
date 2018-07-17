@@ -58,7 +58,7 @@ public class NewsDaoImp implements NewsDao {
         } catch (MySQLIntegrityConstraintViolationException e) {
             return false;
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e);
         }
         return true;
     }

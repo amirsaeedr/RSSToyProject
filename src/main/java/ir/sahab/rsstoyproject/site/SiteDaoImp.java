@@ -2,6 +2,7 @@ package ir.sahab.rsstoyproject.site;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
+import javax.xml.crypto.Data;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,13 +99,14 @@ public class SiteDaoImp implements SiteDao {
     public String getRSSURL() {
         String URL = null;
         try {
-            PreparedStatement databaseStatement = databaseConnector.prepareStatement("select site from Site order by updateDate asc limit 1;");
+            PreparedStatement databaseStatement = databaseConnector.prepareStatement("select * from Site order by lastUpdate asc limit 1");
             ResultSet resultSet = databaseStatement.executeQuery();
-            URL = resultSet.getString("site");
+            while (resultSet.next())
+                URL = resultSet.getString("RSSLink");
         } catch (MySQLIntegrityConstraintViolationException e) {
-            return null;
+            System.out.println(e.getMessage());
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return URL;
     }
@@ -115,7 +117,6 @@ public class SiteDaoImp implements SiteDao {
             PreparedStatement databaseStatement = databaseConnector.prepareStatement("insert into Site(site, contentClass) values(?, ?);");
             databaseStatement.setString(1, siteURL);
             databaseStatement.setString(2, pattern);
-//            databaseStatement.setString(3,site.getName());
             databaseStatement.executeUpdate();
             URLs.add(siteURL);
         } catch (MySQLIntegrityConstraintViolationException e) {
@@ -128,5 +129,19 @@ public class SiteDaoImp implements SiteDao {
     @Override
     public String findPattern(String RSSLink) {
         return null;
+    }
+
+    @Override
+    public void updateLastSrape(String URL) {
+        try {
+            PreparedStatement databaseStatement = databaseConnector.prepareStatement("update Site set lastUpdate = ? where RSSLink = ? ;");
+            databaseStatement.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+            databaseStatement.setString(2, URL);
+            databaseStatement.executeUpdate();
+        } catch (MySQLIntegrityConstraintViolationException e) {
+            System.out.println(e.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

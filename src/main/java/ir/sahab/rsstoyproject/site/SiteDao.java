@@ -14,4 +14,6 @@ public interface SiteDao {
     void addSite(String siteURL, String pattern, String datePattern);
 
     String findPattern(String RSSLink);
+
+    void updateLastSrape(String URL);
 }

@@ -14,13 +14,11 @@ public class App {
 
         Scraper RSSReader = new Scraper();
         RSSReader.start();
-//        ConsoleHandler consoleHandler = new ConsoleHandler();
-//        consoleHandler.run();
         try {
             ShellFactory.createConsoleShell("RSSFeedReader", "", new RequestHandler())
                     .commandLoop();
         } catch (IOException e) {
-            System.out.println(e.getMessage());;
+            System.out.println(e.getMessage());
         }
     }
 }
