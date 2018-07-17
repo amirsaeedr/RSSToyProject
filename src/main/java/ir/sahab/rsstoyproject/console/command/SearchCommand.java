@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class SearchCommand extends Command {
     @Override
     public void execute(String[] args) {
+        //TODO
         ArrayList<String> titles = new ArrayList<>();
         titles = newsDao.search(args[Parts.TYPE.ordinal()], args[Parts.TEXT.ordinal()]);
         for (String title : titles) {
@@ -13,6 +14,6 @@ public class SearchCommand extends Command {
     }
 
     private enum Parts {
-        COMMAND, TYPE, TEXT;
+        COMMAND, TYPE, TEXT
     }
 }

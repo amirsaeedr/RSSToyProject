@@ -27,7 +27,7 @@ public class ConsoleHandler implements Runnable {
         commands.put("-h", new HelpCommand(user, databasePassword));
         commands.put("-s",new SearchCommand());
         commands.put("-a",new NewsSiteCommand());
-        commands.put("-c",new HistoryCommamd());
+        commands.put("-c",new HistoryCommand());
         commands.put("-l",new LatestNewsCommand());
 
     }
