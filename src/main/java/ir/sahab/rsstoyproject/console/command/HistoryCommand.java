@@ -16,12 +16,13 @@ public class HistoryCommand extends Command {
 
     @Override
     public void execute(String[] args) {
+        int length = 4;
         Map<String, Validation> validators = new HashMap<>();
         validators.put("Site name", new WebsiteLinkValidation());
         validators.put("size", new CommandSizeValidation());
         validators.put("date", new DateValidation());
         try {
-            validators.get("size").validate(args, args.length);
+            validators.get("size").validate(args, length);
             validators.get("site name").validate(args, Parts.SITENAME.ordinal());
             validators.get("date").validate(args, Parts.DATE.ordinal());
         } catch (Exception e) {

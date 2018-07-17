@@ -9,6 +9,8 @@ public interface SiteDao {
 
     ArrayList<String> getURLs();
 
+    String getRSSURL();
+
     void addSite(String siteURL, String pattern, String datePattern);
 
     String findPattern(String RSSLink);

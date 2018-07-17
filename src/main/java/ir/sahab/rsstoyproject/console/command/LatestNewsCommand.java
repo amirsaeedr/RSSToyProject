@@ -11,11 +11,12 @@ import java.util.Map;
 public class LatestNewsCommand extends Command {
     @Override
     public void execute(String[] args) {
+        int length = 2;
         Map<String, Validation> validators = new HashMap<>();
         validators.put("Site name", new WebsiteLinkValidation());
         validators.put("size", new CommandSizeValidation());
         try {
-            validators.get("size").validate(args, args.length);
+            validators.get("size").validate(args, length);
             validators.get("site name").validate(args, Parts.SITENAME.ordinal());
         } catch (Exception e) {
             System.out.println(e.getMessage());
