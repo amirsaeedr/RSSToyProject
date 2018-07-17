@@ -1,12 +1,14 @@
 package ir.sahab.rsstoyproject.site;
 
+import java.util.Date;
+
 public class Site {
     private String name;
     private String pattern;
     private String dateFormat;
     private String RSSLink;
-
     private int siteId;
+    private Date lastUpdate;
 
 
 
@@ -30,6 +32,10 @@ public class Site {
         this.siteId = siteId;
     }
 
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
     public String getName() {
         return name;
     }
@@ -44,15 +50,17 @@ public class Site {
 
     public String getRSSLink() { return RSSLink; }
 
-
     public int getSiteId() { return siteId; }
 
-    public Site(String name, String pattern, String dateFormat, String rssLink, int siteId) {
+    public Date getLastUpdate() { return lastUpdate; }
+
+    public Site(String name, String pattern, String dateFormat, String rssLink, int siteId, Date lastUpdate) {
         this.name = name;
         this.pattern = pattern;
         this.dateFormat = dateFormat;
         this.RSSLink = rssLink;
         this.siteId = siteId;
+        this.lastUpdate = lastUpdate;
     }
     public Site(){
 

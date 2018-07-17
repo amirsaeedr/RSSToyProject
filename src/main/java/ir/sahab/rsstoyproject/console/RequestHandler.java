@@ -9,13 +9,13 @@ import ir.sahab.rsstoyproject.site.SiteDaoImp;
 
 import java.util.ArrayList;
 
-public class RequstHandler {
+public class RequestHandler {
     private NewsDao newsDao;
     private SiteDao siteDao;
 
-    public RequstHandler() {
-        newsDao = NewsDaoImp.getInstance("root", "1375109");
-        siteDao = SiteDaoImp.getInstance("root", "1375109");
+    public RequestHandler() {
+        newsDao = NewsDaoImp.getInstance();
+        siteDao = SiteDaoImp.getInstance();
     }
 
     @Command(description = "news count of rss link for a day")
@@ -43,8 +43,7 @@ public class RequstHandler {
 
     @Command(description = "search in title and text")
     public void search(@Param(name = "type") String type, @Param(name = "text") String text) {
-        System.out.println(text);
-        ArrayList<String> titles = titles = newsDao.search(type, text);
+        ArrayList<String> titles = newsDao.search(type, text);
         for (String title : titles) {
             System.out.println(title);
         }

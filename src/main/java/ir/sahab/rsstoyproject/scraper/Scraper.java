@@ -27,20 +27,19 @@ public class Scraper implements Runnable {
     private SiteDao siteDao;
 
     public Scraper() {
-        newsDao = NewsDaoImp.getInstance();
-        siteDao = SiteDaoImp.getInstance();
+        newsDao = NewsDaoImp.getInstance("root", "li24v2hk77");
+        siteDao = SiteDaoImp.getInstance("root", "li24v2hk77");
     }
 
     @Override
     public void run() {
         while (true) {
-            String URL = siteDao.getRSSURL();
-            scrape(URL);
-            try {
-                this.wait(50000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            ArrayList<String> URLs = siteDao.getURLs();
+            for(String URL: URLs)
+            {
+                scrape(URL);
             }
+//            siteDao.updateLastsrape(URL);
         }
     }
 
