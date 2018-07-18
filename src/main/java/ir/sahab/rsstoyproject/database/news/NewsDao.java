@@ -1,6 +1,5 @@
-package ir.sahab.rsstoyproject.news;
+package ir.sahab.rsstoyproject.database.news;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -2,10 +2,10 @@ package ir.sahab.rsstoyproject.console;
 
 import asg.cliche.Command;
 import asg.cliche.Param;
-import ir.sahab.rsstoyproject.news.NewsDao;
-import ir.sahab.rsstoyproject.news.NewsDaoImp;
-import ir.sahab.rsstoyproject.site.SiteDao;
-import ir.sahab.rsstoyproject.site.SiteDaoImp;
+import ir.sahab.rsstoyproject.database.news.NewsDao;
+import ir.sahab.rsstoyproject.database.news.NewsDaoImp;
+import ir.sahab.rsstoyproject.database.site.SiteDao;
+import ir.sahab.rsstoyproject.database.site.SiteDaoImp;
 
 import java.util.ArrayList;
 
@@ -14,8 +14,8 @@ public class RequestHandler {
     private SiteDao siteDao;
 
     public RequestHandler() {
-        newsDao = NewsDaoImp.getInstance();
-        siteDao = SiteDaoImp.getInstance();
+        newsDao = new NewsDaoImp();
+        siteDao = new SiteDaoImp();
     }
 
     @Command(description = "news count of rss link for a day")

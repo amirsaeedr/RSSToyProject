@@ -1,10 +1,10 @@
 package ir.sahab.rsstoyproject.scraper;
 
-import ir.sahab.rsstoyproject.news.News;
-import ir.sahab.rsstoyproject.news.NewsDao;
-import ir.sahab.rsstoyproject.news.NewsDaoImp;
-import ir.sahab.rsstoyproject.site.SiteDao;
-import ir.sahab.rsstoyproject.site.SiteDaoImp;
+import ir.sahab.rsstoyproject.database.news.News;
+import ir.sahab.rsstoyproject.database.news.NewsDao;
+import ir.sahab.rsstoyproject.database.news.NewsDaoImp;
+import ir.sahab.rsstoyproject.database.site.SiteDao;
+import ir.sahab.rsstoyproject.database.site.SiteDaoImp;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,12 +13,9 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
-
-import static java.lang.Thread.*;
 
 public class Scraper implements Runnable {
     private static Logger logger = null;
@@ -32,8 +29,8 @@ public class Scraper implements Runnable {
     public Scraper(String URL) {
         logger = Logger.getLogger(Scraper.class);
         this.URL = URL;
-        newsDao = NewsDaoImp.getInstance();
-        siteDao = SiteDaoImp.getInstance();
+        newsDao = new NewsDaoImp();
+        siteDao = new SiteDaoImp();
     }
 
     @Override

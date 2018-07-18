@@ -1,6 +1,5 @@
-package ir.sahab.rsstoyproject.site;
+package ir.sahab.rsstoyproject.database.site;
 
-import java.util.ArrayList;
 import java.util.Queue;
 
 public interface SiteDao {

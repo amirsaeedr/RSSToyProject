@@ -1,14 +1,15 @@
 package ir.sahab.rsstoyproject.scraper;
 
-import ir.sahab.rsstoyproject.site.SiteDao;
-import ir.sahab.rsstoyproject.site.SiteDaoImp;
+import ir.sahab.rsstoyproject.database.site.SiteDao;
+import ir.sahab.rsstoyproject.database.site.SiteDaoImp;
 
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ScraperPool implements Runnable {
-    private Queue<String> URLS;
+    private Queue<String> urls;
     private ExecutorService executor;
 
     public void start() {
@@ -17,18 +18,21 @@ public class ScraperPool implements Runnable {
     }
 
     public ScraperPool() {
+        urls= new LinkedList<>();
         executor = Executors.newFixedThreadPool(10);
-        SiteDao siteDao = SiteDaoImp.getInstance();
-        URLS = siteDao.getURLs();
+        SiteDao siteDao = new SiteDaoImp();
+        urls = new LinkedList<>(siteDao.getURLs());
     }
-
+    public void addUrl(String url){
+        urls.add(url);
+    }
     @Override
     public void run() {
         while (true) {
-            String URL = URLS.poll();
+            String URL = urls.poll();
             Scraper scraper = new Scraper(URL);
             executor.execute(scraper);
-            URLS.add(URL);
+            urls.add(URL);
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {

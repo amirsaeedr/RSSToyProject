@@ -1,4 +1,4 @@
-package ir.sahab.rsstoyproject.news;
+package ir.sahab.rsstoyproject.database.news;
 
 import java.util.Date;
 

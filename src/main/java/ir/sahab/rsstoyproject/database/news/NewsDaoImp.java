@@ -1,7 +1,7 @@
-package ir.sahab.rsstoyproject.news;
+package ir.sahab.rsstoyproject.database.news;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-import jdk.internal.dynalink.beans.StaticClass;
+import ir.sahab.rsstoyproject.database.C3P0DataSource;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -13,27 +13,13 @@ import java.util.List;
 
 public class NewsDaoImp implements NewsDao {
     private static Logger logger = null;
-    private static NewsDaoImp instance;
     private Connection databaseConnector;
-    private final static String USER_NAME = "root";
-    private final static String PASSWORD = "li24v2hk77";
+    private C3P0DataSource dataSource;
 
-
-    private NewsDaoImp() {
-        try {
-            logger = Logger.getLogger(NewsDao.class);
-            databaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase?useUnicode=yes&characterEncoding=UTF-8", USER_NAME, PASSWORD);
-//            databaseStatement = databaseConnector.createStatement();
-        } catch (SQLException e) {
-            logger.error("Connection couldn't be made with the database", e);
-        }
-    }
-
-    public static NewsDaoImp getInstance() {
-        if (instance == null) {
-            instance = new NewsDaoImp();
-        }
-        return instance;
+    public NewsDaoImp() {
+        logger = Logger.getLogger(NewsDao.class);
+        dataSource = C3P0DataSource.getInstance();
+        databaseConnector = dataSource.getConnection();
     }
 
     @Override
@@ -44,6 +30,7 @@ public class NewsDaoImp implements NewsDao {
     @Override
     public boolean addNews(News news) {
         try {
+//            System.out.println("test");
             PreparedStatement databaseStatement = databaseConnector.prepareStatement("insert into News(title, date, link, content, siteId, NewsId) values(?, ?, ?, ?, ?, ?);");
             databaseStatement.setString(1, news.getTitle());
             databaseStatement.setTimestamp(2, new java.sql.Timestamp(news.getDate().getTime()));
@@ -52,6 +39,7 @@ public class NewsDaoImp implements NewsDao {
             databaseStatement.setInt(5, news.getSiteId());
             databaseStatement.setInt(6, news.getNewsId());
             databaseStatement.executeUpdate();
+//            databaseConnector.close();
         } catch (MySQLIntegrityConstraintViolationException e) {
             return false;
         } catch (SQLException e) {
@@ -70,6 +58,7 @@ public class NewsDaoImp implements NewsDao {
             while (queryResult.next()) {
                 result.add(queryResult.getString("title"));
             }
+            databaseConnector.close();
             return result;
         } catch (SQLException e) {
             logger.error("Error! Search on news table failed", e);
@@ -88,6 +77,7 @@ public class NewsDaoImp implements NewsDao {
                 System.out.println(resultSet.getString("title"));
                 titles.add(resultSet.getString("title"));
             }
+            databaseConnector.close();
         } catch (SQLException e) {
             logger.error("Error! Couldn't fetch top 10 news!", e);
         }
@@ -111,6 +101,7 @@ public class NewsDaoImp implements NewsDao {
             while (resultSet.next()) {
                 titles.add(resultSet.getString("title"));
             }
+            databaseConnector.close();
         } catch (SQLException | ParseException e) {
             logger.error("Error! Couldn't get news on the specific dates", e);
         }
