@@ -24,11 +24,6 @@ public class NewsDaoImp implements NewsDao {
     }
 
     @Override
-    public List<News> getNews() {
-        return null;
-    }
-
-    @Override
     public boolean addNews(News news) {
         try {
             databaseConnector = dataSource.getConnection();

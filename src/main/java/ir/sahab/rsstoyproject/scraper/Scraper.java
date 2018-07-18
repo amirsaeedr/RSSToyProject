@@ -127,6 +127,7 @@ public class Scraper implements Runnable {
             contentDoc = Jsoup.connect(newsLink).get();
         } catch (IOException e) {
             logger.error("Error! Couldn't fetch news link!", e);
+            logger.info(e);
         }
     }
 

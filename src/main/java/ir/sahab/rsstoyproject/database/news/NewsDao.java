@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface NewsDao {
-    List<News> getNews();
 
     boolean addNews(News news);
 
