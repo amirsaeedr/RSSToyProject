@@ -11,17 +11,14 @@ import java.util.List;
 import java.util.Queue;
 
 public class SiteDaoImp implements SiteDao {
-    private static ScraperPool observer;
     private static Logger logger = null;
     private final List<String> dateFormats = null;
-    //    private Queue<String> URLs;
     private Connection databaseConnector;
     private C3P0DataSource dataSource;
 
     public SiteDaoImp() {
         dataSource = C3P0DataSource.getInstance();
         logger = Logger.getLogger(SiteDaoImp.class);
-//        URLs = new LinkedList<>();
         String[] tmpArray = {
                 "E, MMM dd yyyy HH:mm:ss",
                 "E, dd MMM yyyy HH:mm:ss",
@@ -32,16 +29,8 @@ public class SiteDaoImp implements SiteDao {
                 "dd MMM yyyy HH:mm:ss Z",
                 "yyyy-MM-dd'T'HH:mm:ss"
         };
-//        databaseConnector = dataSource.getConnection();
     }
 
-    public static void setObserver(ScraperPool observer) {
-        SiteDaoImp.observer = observer;
-    }
-
-    private void notifyObserver(String url) {
-        observer.addUrl(url);
-    }
 
     @Override
     public String getPattern(String RSSLink) {
@@ -129,7 +118,6 @@ public class SiteDaoImp implements SiteDao {
             databaseStatement.setString(1, siteURL);
             databaseStatement.setString(2, pattern);
             databaseStatement.executeUpdate();
-            notifyObserver(siteURL);
             databaseConnector.close();
         } catch (MySQLIntegrityConstraintViolationException e) {
             return;

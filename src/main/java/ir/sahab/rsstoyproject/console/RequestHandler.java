@@ -47,9 +47,4 @@ public class RequestHandler {
             System.out.println(title);
         }
     }
-
-    @Command(description = "get new news")
-    public void refresh() {
-        notifyAll();
-    }
 }

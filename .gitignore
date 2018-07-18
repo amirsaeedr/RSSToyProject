@@ -14,3 +14,7 @@
 # Maven
 log/
 target/
+
+LogReport.log
+src/main/resources/databaseConfig.properties
+

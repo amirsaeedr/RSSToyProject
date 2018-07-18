@@ -7,14 +7,16 @@ import ir.sahab.rsstoyproject.scraper.ScraperPool;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * RSS feed reader!
  */
 public class App {
     public static void main(String[] args) {
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         ScraperPool scraperPool = new ScraperPool();
-        scraperPool.start();
+        executor.scheduleAtFixedRate(scraperPool, 0, 1, TimeUnit.SECONDS);
         try {
             ShellFactory.createConsoleShell("RSSFeedReader", "", new RequestHandler())
                     .commandLoop();

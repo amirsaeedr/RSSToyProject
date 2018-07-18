@@ -9,34 +9,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ScraperPool implements Runnable {
-    private Queue<String> urls;
     private ExecutorService executor;
-
-    public void start() {
-        Thread thread = new Thread(this, "ScrapThread");
-        thread.start();
-    }
+    private SiteDao siteDao;
 
     public ScraperPool() {
-        urls= new LinkedList<>();
-        executor = Executors.newFixedThreadPool(20);
-        SiteDao siteDao = new SiteDaoImp();
-        urls = new LinkedList<>(siteDao.getURLs());
+        executor = Executors.newFixedThreadPool(10);
+        siteDao = new SiteDaoImp();
     }
-    public void addUrl(String url){
-        urls.add(url);
-    }
+
     @Override
     public void run() {
-        while (true) {
-            String URL = urls.poll();
-            executor.execute(new Scraper(URL));
-            urls.add(URL);
-            try {
-                Thread.sleep(5);
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }
+        Queue<String> urls = siteDao.getURLs();
+        for (String url : urls) {
+            executor.execute(new Scraper(url));
         }
     }
 }
