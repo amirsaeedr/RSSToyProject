@@ -1,13 +1,14 @@
 package ir.sahab.rsstoyproject.site;
 
 import java.util.ArrayList;
+import java.util.Queue;
 
 public interface SiteDao {
     String getPattern(String RSSLink);
 
     String getDateFormat(String site);
 
-    ArrayList<String> getURLs();
+    Queue<String> getURLs();
 
     String getRSSURL();
 

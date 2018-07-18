@@ -58,11 +58,19 @@ public class News {
         this.content = content;
     }
 
-    public int getSiteId() { return siteId; }
+    public int getSiteId() {
+        return siteId;
+    }
 
-    public void setSite(int siteId) { this.siteId = siteId; }
+    public void setSite(int siteId) {
+        this.siteId = siteId;
+    }
 
-    public int getNewsId() { return newsId; }
+    public int getNewsId() {
+        return newsId;
+    }
 
-    public void setNewsID(int newsId) { this.newsId = newsId; }
+    public void setNewsID(int newsId) {
+        this.newsId = newsId;
+    }
 }

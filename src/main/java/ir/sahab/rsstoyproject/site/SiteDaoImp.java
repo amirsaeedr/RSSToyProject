@@ -5,20 +5,21 @@ import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationExceptio
 import javax.xml.crypto.Data;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class SiteDaoImp implements SiteDao {
     private final List<String> dateFormats = null;
-    private ArrayList<String> URLs;
+    private Queue<String> URLs;
     private static SiteDaoImp instance;
     private Connection databaseConnector;
+    private final static String USER_NAME = "root";
+    private final static String PASSWORD = "1375109";
 
     private SiteDaoImp() {
-    }
-
-    public SiteDaoImp(String user, String password) {
         try {
-            URLs = new ArrayList<>();
+            URLs = new LinkedList<>();
             String[] tmpArray = {
                     "E, MMM dd yyyy HH:mm:ss",
                     "E, dd MMM yyyy HH:mm:ss",
@@ -29,17 +30,10 @@ public class SiteDaoImp implements SiteDao {
                     "dd MMM yyyy HH:mm:ss Z",
                     "yyyy-MM-dd'T'HH:mm:ss"
             };
-            databaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase?useUnicode=yes&characterEncoding=UTF-8", user, password);
+            databaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase?useUnicode=yes&characterEncoding=UTF-8", USER_NAME, PASSWORD);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public static SiteDaoImp getInstance(String user, String password) {
-        if (instance == null) {
-            instance = new SiteDaoImp(user, password);
-        }
-        return instance;
     }
 
     public static SiteDaoImp getInstance() {
@@ -82,7 +76,7 @@ public class SiteDaoImp implements SiteDao {
     }
 
     @Override
-    public ArrayList<String> getURLs() {
+    public Queue<String> getURLs() {
         try {
             PreparedStatement query = databaseConnector.prepareStatement("select * from Site");
             ResultSet queryResult = query.executeQuery();

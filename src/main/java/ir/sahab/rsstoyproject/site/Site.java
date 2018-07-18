@@ -11,7 +11,6 @@ public class Site {
     private Date lastUpdate;
 
 
-
     public void setName(String name) {
         this.name = name;
     }
@@ -48,11 +47,17 @@ public class Site {
         return dateFormat;
     }
 
-    public String getRSSLink() { return RSSLink; }
+    public String getRSSLink() {
+        return RSSLink;
+    }
 
-    public int getSiteId() { return siteId; }
+    public int getSiteId() {
+        return siteId;
+    }
 
-    public Date getLastUpdate() { return lastUpdate; }
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
 
     public Site(String name, String pattern, String dateFormat, String rssLink, int siteId, Date lastUpdate) {
         this.name = name;
@@ -62,7 +67,8 @@ public class Site {
         this.siteId = siteId;
         this.lastUpdate = lastUpdate;
     }
-    public Site(){
+
+    public Site() {
 
     }
 }

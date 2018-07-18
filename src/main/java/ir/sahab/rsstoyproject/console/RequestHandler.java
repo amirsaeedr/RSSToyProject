@@ -20,8 +20,7 @@ public class RequestHandler {
 
     @Command(description = "news count of rss link for a day")
     public void countOfNews(@Param(name = "webSiteAddress") String webSiteLink, @Param(name = "date") String date) {
-        ArrayList<String> titles = new ArrayList<>();
-        titles = newsDao.getNewsFromADay(webSiteLink, date);
+        ArrayList<String> titles = newsDao.getNewsFromADay(webSiteLink, date);
         for (String title : titles) {
             System.out.println(title);
         }

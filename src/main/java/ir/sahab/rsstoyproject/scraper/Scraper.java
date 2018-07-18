@@ -25,24 +25,17 @@ public class Scraper implements Runnable {
     private String RSSAddress;
     private NewsDao newsDao;
     private SiteDao siteDao;
+    private String URL;
 
-    public Scraper() {
-        newsDao = NewsDaoImp.getInstance("root", "1375109");
-        siteDao = SiteDaoImp.getInstance("root", "1375109");
+    public Scraper(String URL) {
+        this.URL = URL;
+        newsDao = NewsDaoImp.getInstance();
+        siteDao = SiteDaoImp.getInstance();
     }
 
     @Override
     public void run() {
-        while (true) {
-            String URL = siteDao.getRSSURL();
-            scrape(URL);
-            siteDao.updateLastSrape(URL);
-        }
-    }
-
-    public void start() {
-        thread = new Thread(this, "ScrapThread");
-        thread.start();
+        scrape(URL);
     }
 
     private void scrapeNewsData() {
@@ -64,6 +57,7 @@ public class Scraper implements Runnable {
             if (!newsDao.addNews(news)) {
                 break;
             }
+//            System.out.println("add\t" + news.getTitle());
             try {
                 thread.sleep(100);
             } catch (InterruptedException e) {
@@ -119,7 +113,7 @@ public class Scraper implements Runnable {
             contentDoc = Jsoup.connect(newsLink).get();
         } catch (IOException e) {
             System.out.println("Couldn't load " + newsLink);
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 

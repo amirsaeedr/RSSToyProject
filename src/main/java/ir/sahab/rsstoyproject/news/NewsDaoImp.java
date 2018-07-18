@@ -1,6 +1,7 @@
 package ir.sahab.rsstoyproject.news;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+import jdk.internal.dynalink.beans.StaticClass;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,24 +13,17 @@ import java.util.List;
 public class NewsDaoImp implements NewsDao {
     private static NewsDaoImp instance;
     private Connection databaseConnector;
+    private final static String USER_NAME = "root";
+    private final static String PASSWORD = "1375109";
+
 
     private NewsDaoImp() {
-    }
-
-    public NewsDaoImp(String user, String password) {
         try {
-            databaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase?useUnicode=yes&characterEncoding=UTF-8", user, password);
+            databaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase?useUnicode=yes&characterEncoding=UTF-8", USER_NAME, PASSWORD);
 //            databaseStatement = databaseConnector.createStatement();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public static NewsDaoImp getInstance(String user, String password) {
-        if (instance == null) {
-            instance = new NewsDaoImp(user, password);
-        }
-        return instance;
     }
 
     public static NewsDaoImp getInstance() {

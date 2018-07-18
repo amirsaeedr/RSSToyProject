@@ -2,7 +2,8 @@ package ir.sahab.rsstoyproject;
 
 import asg.cliche.ShellFactory;
 import ir.sahab.rsstoyproject.console.RequestHandler;
-import ir.sahab.rsstoyproject.scraper.Scraper;
+import ir.sahab.rsstoyproject.scraper.ScraperPool;
+//import ir.sahab.rsstoyproject.scraper.Scraper;
 
 import java.io.IOException;
 
@@ -11,9 +12,8 @@ import java.io.IOException;
  */
 public class App {
     public static void main(String[] args) {
-
-        Scraper RSSReader = new Scraper();
-        RSSReader.start();
+        ScraperPool pool = new ScraperPool();
+        pool.start();
         try {
             ShellFactory.createConsoleShell("RSSFeedReader", "", new RequestHandler())
                     .commandLoop();
