@@ -2,6 +2,7 @@ package ir.sahab.rsstoyproject.news;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import jdk.internal.dynalink.beans.StaticClass;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,18 +12,20 @@ import java.util.Calendar;
 import java.util.List;
 
 public class NewsDaoImp implements NewsDao {
+    private static Logger logger = null;
     private static NewsDaoImp instance;
     private Connection databaseConnector;
     private final static String USER_NAME = "root";
-    private final static String PASSWORD = "1375109";
+    private final static String PASSWORD = "li24v2hk77";
 
 
     private NewsDaoImp() {
         try {
+            logger = Logger.getLogger(NewsDao.class);
             databaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase?useUnicode=yes&characterEncoding=UTF-8", USER_NAME, PASSWORD);
 //            databaseStatement = databaseConnector.createStatement();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Connection couldn't be made with the database", e);
         }
     }
 
@@ -52,7 +55,7 @@ public class NewsDaoImp implements NewsDao {
         } catch (MySQLIntegrityConstraintViolationException e) {
             return false;
         } catch (SQLException e) {
-            System.out.println(e);
+            logger.error("Error! Couldn't add news to the database", e);
         }
         return true;
     }
@@ -69,7 +72,7 @@ public class NewsDaoImp implements NewsDao {
             }
             return result;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error! Search on news table failed", e);
         }
         return null;
     }
@@ -85,10 +88,8 @@ public class NewsDaoImp implements NewsDao {
                 System.out.println(resultSet.getString("title"));
                 titles.add(resultSet.getString("title"));
             }
-        } catch (MySQLIntegrityConstraintViolationException e) {
-            return null;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error! Couldn't fetch top 10 news!", e);
         }
         return titles;
     }
@@ -110,10 +111,8 @@ public class NewsDaoImp implements NewsDao {
             while (resultSet.next()) {
                 titles.add(resultSet.getString("title"));
             }
-        } catch (MySQLIntegrityConstraintViolationException e) {
-            return null;
         } catch (SQLException | ParseException e) {
-            e.printStackTrace();
+            logger.error("Error! Couldn't get news on the specific dates", e);
         }
         return titles;
     }

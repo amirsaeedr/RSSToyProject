@@ -8,8 +8,6 @@ public class Site {
     private String dateFormat;
     private String RSSLink;
     private int siteId;
-    private Date lastUpdate;
-
 
     public void setName(String name) {
         this.name = name;
@@ -31,10 +29,6 @@ public class Site {
         this.siteId = siteId;
     }
 
-    public void setLastUpdate(Date lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-
     public String getName() {
         return name;
     }
@@ -47,16 +41,10 @@ public class Site {
         return dateFormat;
     }
 
-    public String getRSSLink() {
-        return RSSLink;
-    }
+    public String getRSSLink() { return RSSLink; }
 
     public int getSiteId() {
         return siteId;
-    }
-
-    public Date getLastUpdate() {
-        return lastUpdate;
     }
 
     public Site(String name, String pattern, String dateFormat, String rssLink, int siteId, Date lastUpdate) {
@@ -65,7 +53,6 @@ public class Site {
         this.dateFormat = dateFormat;
         this.RSSLink = rssLink;
         this.siteId = siteId;
-        this.lastUpdate = lastUpdate;
     }
 
     public Site() {

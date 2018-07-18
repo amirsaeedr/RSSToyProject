@@ -16,9 +16,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 import static java.lang.Thread.*;
 
 public class Scraper implements Runnable {
+    private static Logger logger = null;
     private Document contentDoc = null;
     private Document RSSDoc = null;
     private Thread thread;
@@ -26,8 +29,8 @@ public class Scraper implements Runnable {
     private NewsDao newsDao;
     private SiteDao siteDao;
     private String URL;
-
     public Scraper(String URL) {
+        logger = Logger.getLogger(Scraper.class);
         this.URL = URL;
         newsDao = NewsDaoImp.getInstance();
         siteDao = SiteDaoImp.getInstance();
@@ -39,7 +42,13 @@ public class Scraper implements Runnable {
     }
 
     private void scrapeNewsData() {
-        Elements items = RSSDoc.select("item");
+        Elements items = null;
+        try {
+            items = RSSDoc.select("item");
+        } catch (NullPointerException e) {
+            logger.error("Error! Item couldn't be fetched from the RSS", e);
+            return;
+        }
         String title = null;
         String content = null;
         String site = null;
@@ -57,11 +66,10 @@ public class Scraper implements Runnable {
             if (!newsDao.addNews(news)) {
                 break;
             }
-//            System.out.println("add\t" + news.getTitle());
             try {
                 thread.sleep(100);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.error("Error! Extracting News failed", e);
             }
 
         }
@@ -71,9 +79,14 @@ public class Scraper implements Runnable {
         try {
             RSSAddress = RSSLink;
             RSSDoc = Jsoup.connect(RSSLink).get();
+        } catch (java.net.UnknownHostException e) {
+            logger.error("Error! Rejected by the website");
+            logger.info(e);
+            return;
         } catch (IOException e) {
             //TODO
-            e.printStackTrace();
+            logger.error("Error! Couldn't Scrape " + RSSLink, e);
+            return;
         }
         scrapeNewsData();
     }
@@ -93,8 +106,7 @@ public class Scraper implements Runnable {
         try {
             return format.parse(dateString);
         } catch (ParseException e) {
-            //TODO
-            e.printStackTrace();
+            logger.error("Couldn't parse the String date " + dateString + " by format " + formatString, e);
         }
         return null;
     }
@@ -112,8 +124,7 @@ public class Scraper implements Runnable {
         try {
             contentDoc = Jsoup.connect(newsLink).get();
         } catch (IOException e) {
-            System.out.println("Couldn't load " + newsLink);
-//            e.printStackTrace();
+            logger.error("Error! Couldn't fetch news link!", e);
         }
     }
 

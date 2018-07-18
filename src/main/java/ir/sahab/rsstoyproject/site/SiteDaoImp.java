@@ -1,6 +1,7 @@
 package ir.sahab.rsstoyproject.site;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+import org.apache.log4j.Logger;
 
 import javax.xml.crypto.Data;
 import java.sql.*;
@@ -10,15 +11,17 @@ import java.util.List;
 import java.util.Queue;
 
 public class SiteDaoImp implements SiteDao {
+    private static Logger logger = null;
     private final List<String> dateFormats = null;
     private Queue<String> URLs;
     private static SiteDaoImp instance;
     private Connection databaseConnector;
     private final static String USER_NAME = "root";
-    private final static String PASSWORD = "1375109";
+    private final static String PASSWORD = "li24v2hk77";
 
     private SiteDaoImp() {
         try {
+            logger = Logger.getLogger(SiteDaoImp.class);
             URLs = new LinkedList<>();
             String[] tmpArray = {
                     "E, MMM dd yyyy HH:mm:ss",
@@ -32,7 +35,7 @@ public class SiteDaoImp implements SiteDao {
             };
             databaseConnector = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase?useUnicode=yes&characterEncoding=UTF-8", USER_NAME, PASSWORD);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Connection couldn't be made with the database", e);
         }
     }
 
@@ -54,7 +57,7 @@ public class SiteDaoImp implements SiteDao {
             }
             databaseConnector.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error! Getting pattern for " + RSSLink + " failed", e);
         }
         return null;
     }
@@ -70,7 +73,7 @@ public class SiteDaoImp implements SiteDao {
             }
             databaseConnector.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error! Getting date format for " + site + " failed", e);
         }
         return null;
     }
@@ -84,25 +87,9 @@ public class SiteDaoImp implements SiteDao {
                 URLs.add(queryResult.getString("RSSLink"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error! Getting URLs from database failed ", e);
         }
         return URLs;
-    }
-
-    @Override
-    public String getRSSURL() {
-        String URL = null;
-        try {
-            PreparedStatement databaseStatement = databaseConnector.prepareStatement("select * from Site order by lastUpdate asc limit 1");
-            ResultSet resultSet = databaseStatement.executeQuery();
-            while (resultSet.next())
-                URL = resultSet.getString("RSSLink");
-        } catch (MySQLIntegrityConstraintViolationException e) {
-            System.out.println(e.getMessage());
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return URL;
     }
 
     @Override
@@ -116,7 +103,7 @@ public class SiteDaoImp implements SiteDao {
         } catch (MySQLIntegrityConstraintViolationException e) {
             return;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error! Couldn't add new website to the database", e);
         }
     }
 
@@ -125,17 +112,4 @@ public class SiteDaoImp implements SiteDao {
         return null;
     }
 
-    @Override
-    public void updateLastSrape(String URL) {
-        try {
-            PreparedStatement databaseStatement = databaseConnector.prepareStatement("update Site set lastUpdate = ? where RSSLink = ? ;");
-            databaseStatement.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
-            databaseStatement.setString(2, URL);
-            databaseStatement.executeUpdate();
-        } catch (MySQLIntegrityConstraintViolationException e) {
-            System.out.println(e.getMessage());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }
