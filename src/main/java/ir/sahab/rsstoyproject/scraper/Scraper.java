@@ -63,12 +63,11 @@ public class Scraper implements Runnable {
             if (!newsDao.addNews(news)) {
                 break;
             }
-            try {
-                thread.sleep(100);
-            } catch (InterruptedException e) {
-                logger.error("Error! Extracting News failed", e);
-            }
-
+//            try {
+//                thread.sleep(100);
+//            } catch (InterruptedException e) {
+//                logger.error("Error! Extracting News failed", e);
+//            }
         }
     }
 
@@ -114,7 +113,13 @@ public class Scraper implements Runnable {
 
     private String getNewsContent(String newsLink) {
         String contentClass = getContentClass(newsLink);
-        return contentDoc.getElementsByClass(contentClass).text();
+        try {
+            return contentDoc.getElementsByClass(contentClass).text();
+        }catch (NullPointerException e){
+            System.out.println(contentClass);
+            System.out.println(newsLink);
+        }
+        return null;
     }
 
     private void getContentDocument(String newsLink) {

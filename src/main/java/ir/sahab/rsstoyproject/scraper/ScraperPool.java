@@ -19,7 +19,7 @@ public class ScraperPool implements Runnable {
 
     public ScraperPool() {
         urls= new LinkedList<>();
-        executor = Executors.newFixedThreadPool(10);
+        executor = Executors.newFixedThreadPool(20);
         SiteDao siteDao = new SiteDaoImp();
         urls = new LinkedList<>(siteDao.getURLs());
     }
@@ -30,15 +30,13 @@ public class ScraperPool implements Runnable {
     public void run() {
         while (true) {
             String URL = urls.poll();
-            Scraper scraper = new Scraper(URL);
-            executor.execute(scraper);
+            executor.execute(new Scraper(URL));
             urls.add(URL);
             try {
-                Thread.sleep(5000);
+                Thread.sleep(5);
             } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
             }
-//            System.out.println(URL);
         }
     }
 }

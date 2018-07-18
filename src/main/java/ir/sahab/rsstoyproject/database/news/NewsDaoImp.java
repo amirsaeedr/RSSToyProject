@@ -15,11 +15,12 @@ public class NewsDaoImp implements NewsDao {
     private static Logger logger = null;
     private Connection databaseConnector;
     private C3P0DataSource dataSource;
+    private static int count = 0;
 
     public NewsDaoImp() {
         logger = Logger.getLogger(NewsDao.class);
         dataSource = C3P0DataSource.getInstance();
-        databaseConnector = dataSource.getConnection();
+//        databaseConnector = dataSource.getConnection();
     }
 
     @Override
@@ -30,7 +31,7 @@ public class NewsDaoImp implements NewsDao {
     @Override
     public boolean addNews(News news) {
         try {
-//            System.out.println("test");
+            databaseConnector = dataSource.getConnection();
             PreparedStatement databaseStatement = databaseConnector.prepareStatement("insert into News(title, date, link, content, siteId, NewsId) values(?, ?, ?, ?, ?, ?);");
             databaseStatement.setString(1, news.getTitle());
             databaseStatement.setTimestamp(2, new java.sql.Timestamp(news.getDate().getTime()));
@@ -39,11 +40,19 @@ public class NewsDaoImp implements NewsDao {
             databaseStatement.setInt(5, news.getSiteId());
             databaseStatement.setInt(6, news.getNewsId());
             databaseStatement.executeUpdate();
-//            databaseConnector.close();
+            databaseConnector.close();
         } catch (MySQLIntegrityConstraintViolationException e) {
             return false;
         } catch (SQLException e) {
             logger.error("Error! Couldn't add news to the database", e);
+        } finally {
+            if (databaseConnector != null) {
+                try {
+                    databaseConnector.close();
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
         }
         return true;
     }
@@ -51,6 +60,7 @@ public class NewsDaoImp implements NewsDao {
     @Override
     public ArrayList<String> search(String field, String text) {
         try {
+            databaseConnector = dataSource.getConnection();
             ArrayList<String> result = new ArrayList<>();
             PreparedStatement databaseStatement = databaseConnector.prepareStatement("select title from News where " + field + " like ?;");
             databaseStatement.setString(1, "%" + text + "%");
@@ -62,6 +72,14 @@ public class NewsDaoImp implements NewsDao {
             return result;
         } catch (SQLException e) {
             logger.error("Error! Search on news table failed", e);
+        } finally {
+            if (databaseConnector != null) {
+                try {
+                    databaseConnector.close();
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
         }
         return null;
     }
@@ -70,6 +88,7 @@ public class NewsDaoImp implements NewsDao {
     public ArrayList<String> getLatestNews(String siteName) {
         ArrayList<String> titles = new ArrayList<>();
         try {
+            databaseConnector = dataSource.getConnection();
             PreparedStatement databaseStatement = databaseConnector.prepareStatement("select title from News where siteId = ? order by date desc limit 10;");
             databaseStatement.setInt(1, siteName.hashCode());
             ResultSet resultSet = databaseStatement.executeQuery();
@@ -80,6 +99,14 @@ public class NewsDaoImp implements NewsDao {
             databaseConnector.close();
         } catch (SQLException e) {
             logger.error("Error! Couldn't fetch top 10 news!", e);
+        } finally {
+            if (databaseConnector != null) {
+                try {
+                    databaseConnector.close();
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
         }
         return titles;
     }
@@ -88,6 +115,7 @@ public class NewsDaoImp implements NewsDao {
     public ArrayList<String> getNewsFromADay(String siteName, String date) {
         ArrayList<String> titles = new ArrayList<>();
         try {
+            databaseConnector = dataSource.getConnection();
             Calendar cal = Calendar.getInstance();
             SimpleDateFormat standardFormat = new SimpleDateFormat("yyyy-MM-dd");
             cal.setTime(standardFormat.parse(date));
@@ -104,6 +132,14 @@ public class NewsDaoImp implements NewsDao {
             databaseConnector.close();
         } catch (SQLException | ParseException e) {
             logger.error("Error! Couldn't get news on the specific dates", e);
+        } finally {
+            if (databaseConnector != null) {
+                try {
+                    databaseConnector.close();
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
         }
         return titles;
     }

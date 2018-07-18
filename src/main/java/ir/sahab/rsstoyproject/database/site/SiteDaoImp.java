@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Queue;
 
 public class SiteDaoImp implements SiteDao {
-    private static ScraperPool observer ;
+    private static ScraperPool observer;
     private static Logger logger = null;
     private final List<String> dateFormats = null;
-//    private Queue<String> URLs;
+    //    private Queue<String> URLs;
     private Connection databaseConnector;
     private C3P0DataSource dataSource;
 
@@ -32,27 +32,39 @@ public class SiteDaoImp implements SiteDao {
                 "dd MMM yyyy HH:mm:ss Z",
                 "yyyy-MM-dd'T'HH:mm:ss"
         };
-        databaseConnector = dataSource.getConnection();
+//        databaseConnector = dataSource.getConnection();
     }
 
     public static void setObserver(ScraperPool observer) {
         SiteDaoImp.observer = observer;
     }
-    private void notifyObserver(String url){
+
+    private void notifyObserver(String url) {
         observer.addUrl(url);
     }
+
     @Override
     public String getPattern(String RSSLink) {
         try {
+            databaseConnector = dataSource.getConnection();
             PreparedStatement query = databaseConnector.prepareStatement("select * from Site where RSSlink = ?");
             query.setString(1, RSSLink);
             ResultSet queryResult = query.executeQuery();
             while (queryResult.next()) {
-                return queryResult.getString("contentClass");
+                String pattern = queryResult.getString("contentClass");
+                databaseConnector.close();
+                return pattern;
             }
-            databaseConnector.close();
         } catch (SQLException e) {
             logger.error("Error! Getting pattern for " + RSSLink + " failed", e);
+        } finally {
+            if (databaseConnector != null) {
+                try {
+                    databaseConnector.close();
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
         }
         return null;
     }
@@ -60,15 +72,26 @@ public class SiteDaoImp implements SiteDao {
     @Override
     public String getDateFormat(String site) {
         try {
+            databaseConnector = dataSource.getConnection();
             PreparedStatement query = databaseConnector.prepareStatement("select * from Site where RSSlink = ?");
             query.setString(1, site);
             ResultSet queryResult = query.executeQuery();
             while (queryResult.next()) {
-                return queryResult.getString("dateFormat");
+                String dateFormat = queryResult.getString("dateFormat");
+                databaseConnector.close();
+                return dateFormat;
             }
-            databaseConnector.close();
+
         } catch (SQLException e) {
             logger.error("Error! Getting date format for " + site + " failed", e);
+        } finally {
+            if (databaseConnector != null) {
+                try {
+                    databaseConnector.close();
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
         }
         return null;
     }
@@ -77,6 +100,7 @@ public class SiteDaoImp implements SiteDao {
     public Queue<String> getURLs() {
         Queue<String> urls = new LinkedList<>();
         try {
+            databaseConnector = dataSource.getConnection();
             PreparedStatement query = databaseConnector.prepareStatement("select * from Site");
             ResultSet queryResult = query.executeQuery();
             while (queryResult.next()) {
@@ -85,14 +109,22 @@ public class SiteDaoImp implements SiteDao {
             databaseConnector.close();
         } catch (SQLException e) {
             logger.error("Error! Getting URLs from database failed ", e);
+        } finally {
+            if (databaseConnector != null) {
+                try {
+                    databaseConnector.close();
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
         }
         return urls;
     }
 
     @Override
     public void addSite(String siteURL, String pattern, String datePattern) {
-        databaseConnector = dataSource.getConnection();
         try {
+            databaseConnector = dataSource.getConnection();
             PreparedStatement databaseStatement = databaseConnector.prepareStatement("insert into Site(site, contentClass) values(?, ?);");
             databaseStatement.setString(1, siteURL);
             databaseStatement.setString(2, pattern);
@@ -103,6 +135,14 @@ public class SiteDaoImp implements SiteDao {
             return;
         } catch (SQLException e) {
             logger.error("Error! Couldn't add new website to the database", e);
+        } finally {
+            if (databaseConnector != null) {
+                try {
+                    databaseConnector.close();
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
         }
     }
 
