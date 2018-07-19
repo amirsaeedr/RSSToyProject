@@ -7,7 +7,10 @@ import ir.sahab.rsstoyproject.database.news.NewsDaoImp;
 import ir.sahab.rsstoyproject.database.site.SiteDao;
 import ir.sahab.rsstoyproject.database.site.SiteDaoImp;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 public class RequestHandler {
@@ -21,24 +24,25 @@ public class RequestHandler {
 
     @Command(description = "news count of rss link for a day")
     public void countOfNews(@Param(name = "webSiteAddress") String webSiteLink, @Param(name = "date") String date) {
-        websiteLinkValidation(webSiteLink);
-        System.out.println(newsDao.getNewsFromADay(webSiteLink, date));
+        if (websiteLinkValidation(webSiteLink) & isThisDateValid(date))
+            System.out.println(newsDao.getNewsFromADay(webSiteLink, date));
 
     }
 
     @Command(description = "get latest news of rss")
     public void LatestNews(@Param(name = "webSiteLink") String webSiteLink) {
-        websiteLinkValidation(webSiteLink);
-        ArrayList<String> titles = newsDao.getLatestNews(webSiteLink);
-        for (String title : titles) {
-            System.out.println(title);
+        if (websiteLinkValidation(webSiteLink)) {
+            ArrayList<String> titles = newsDao.getLatestNews(webSiteLink);
+            for (String title : titles) {
+                System.out.println(title);
+            }
         }
     }
 
     @Command(description = "add new website")
     public void addNewSite(@Param(name = "RSSLink") String RSSLink, @Param(name = "pattern") String pattern) {
         String datePattern = null;
-        siteDao.addSite(RSSLink, pattern, datePattern);
+        siteDao.addSite(RSSLink, pattern);
     }
 
     @Command(description = "search in title and text")
@@ -49,10 +53,26 @@ public class RequestHandler {
         }
     }
 
-    private void websiteLinkValidation(String websiteLink) {
+    private boolean websiteLinkValidation(String websiteLink) {
         Pattern pattern = Pattern.compile("^(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/)?[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?(\\/.*)?$");
         if (!pattern.matcher(websiteLink).matches()) {
             System.out.println("website is not valid");
+            return false;
         }
+        return true;
+    }
+
+    public boolean isThisDateValid(String dateToValidate) {
+        String dateFormat = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+        simpleDateFormat.setLenient(false);
+        try {
+            Date date = simpleDateFormat.parse(dateToValidate);
+
+        } catch (ParseException e) {
+            System.out.println("date is not valid");
+            return false;
+        }
+        return true;
     }
 }

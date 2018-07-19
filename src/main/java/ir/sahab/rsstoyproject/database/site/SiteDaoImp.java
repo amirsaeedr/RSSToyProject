@@ -27,7 +27,24 @@ public class SiteDaoImp implements SiteDao {
                 "E, dd MMM yyyy HH:mm:ss",
                 "E, dd MMM yyyy HH:mm:ss Z",
                 "dd MMM yyyy HH:mm:ss Z",
-                "yyyy-MM-dd'T'HH:mm:ss"
+                "yyyy-MM-dd'T'HH:mm:ss",
+                "EEE, dd MMM yyyy HH:mm:ss Z",
+                "dd MMM yyyy HH:mm:ss Z",
+                "EEE, dd MMM yyyy HH:mm",
+                "dd MMM yyyy HH:mm",
+                "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+                "EEE, d MMM yyyy HH:mm:ss Z",
+                "EEE, dd MMM yyyy HH:mm:ss zzz",
+                "yyyy-mm-dd HH:mm:ss",
+                "yyyy-mm-dd hh:mm:ss",
+                "yyyy-MM-dd'T'HH:mm:ssZ",
+                "yyyy-MM-dd'T'HH:mm:ss",
+                "yyyy-MM-dd'T'HH:mm:ssZ",
+                "yyyy-MM-dd'T'HH:mm:ss Z",
+                "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+                "yyyy-MM-dd'T'hh:mm:ssXXX",
+                "dd MMM yyyy HH:mm:ss Z",
+                "MM/dd/yyyy",
         };
     }
 
@@ -111,7 +128,7 @@ public class SiteDaoImp implements SiteDao {
     }
 
     @Override
-    public void addSite(String siteURL, String pattern, String datePattern) {
+    public void addSite(String siteURL, String pattern) {
         try {
             databaseConnector = dataSource.getConnection();
             PreparedStatement databaseStatement = databaseConnector.prepareStatement("insert into Site(site, contentClass) values(?, ?);");

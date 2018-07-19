@@ -9,7 +9,7 @@ public interface SiteDao {
 
     Queue<String> getURLs();
 
-    void addSite(String siteURL, String pattern, String datePattern);
+    void addSite(String siteURL, String pattern);
 
     String findPattern(String RSSLink);
 }
