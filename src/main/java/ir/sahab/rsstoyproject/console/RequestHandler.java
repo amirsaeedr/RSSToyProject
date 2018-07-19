@@ -8,6 +8,7 @@ import ir.sahab.rsstoyproject.database.site.SiteDao;
 import ir.sahab.rsstoyproject.database.site.SiteDaoImp;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public class RequestHandler {
     private NewsDao newsDao;
@@ -20,15 +21,15 @@ public class RequestHandler {
 
     @Command(description = "news count of rss link for a day")
     public void countOfNews(@Param(name = "webSiteAddress") String webSiteLink, @Param(name = "date") String date) {
-        ArrayList<String> titles = newsDao.getNewsFromADay(webSiteLink, date);
-        for (String title : titles) {
-            System.out.println(title);
-        }
+        websiteLinkValidation(webSiteLink);
+        System.out.println(newsDao.getNewsFromADay(webSiteLink, date));
+
     }
 
     @Command(description = "get latest news of rss")
-    public void LatestNews(@Param(name = "webSiteName") String webSiteName) {
-        ArrayList<String> titles = newsDao.getLatestNews(webSiteName);
+    public void LatestNews(@Param(name = "webSiteLink") String webSiteLink) {
+        websiteLinkValidation(webSiteLink);
+        ArrayList<String> titles = newsDao.getLatestNews(webSiteLink);
         for (String title : titles) {
             System.out.println(title);
         }
@@ -45,6 +46,13 @@ public class RequestHandler {
         ArrayList<String> titles = newsDao.search(type, text);
         for (String title : titles) {
             System.out.println(title);
+        }
+    }
+
+    private void websiteLinkValidation(String websiteLink) {
+        Pattern pattern = Pattern.compile("^(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/)?[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?(\\/.*)?$");
+        if (!pattern.matcher(websiteLink).matches()) {
+            System.out.println("website is not valid");
         }
     }
 }

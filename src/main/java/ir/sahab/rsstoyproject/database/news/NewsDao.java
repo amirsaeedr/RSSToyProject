@@ -11,5 +11,5 @@ public interface NewsDao {
 
     ArrayList<String> getLatestNews(String siteName);
 
-    ArrayList<String> getNewsFromADay(String siteName, String date);
+    int getNewsFromADay(String siteName, String date);
 }

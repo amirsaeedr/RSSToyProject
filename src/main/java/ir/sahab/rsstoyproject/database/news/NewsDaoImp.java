@@ -103,12 +103,14 @@ public class NewsDaoImp implements NewsDao {
                 }
             }
         }
+        if (titles.isEmpty())
+            titles.add("couldn't find any record");
         return titles;
     }
 
     @Override
-    public ArrayList<String> getNewsFromADay(String siteName, String date) {
-        ArrayList<String> titles = new ArrayList<>();
+    public int getNewsFromADay(String siteName, String date) {
+        int count = 0;
         try {
             databaseConnector = dataSource.getConnection();
             Calendar cal = Calendar.getInstance();
@@ -116,13 +118,13 @@ public class NewsDaoImp implements NewsDao {
             cal.setTime(standardFormat.parse(date));
             cal.add(Calendar.DATE, 1);
             String lastDay = standardFormat.format(cal.getTime());
-            PreparedStatement databaseStatement = databaseConnector.prepareStatement("select title from News where siteId = ? and date > ? and date < ?;");
+            PreparedStatement databaseStatement = databaseConnector.prepareStatement("select count(*)from News where siteId = ? and date > ? and date < ?;");
             databaseStatement.setInt(1, siteName.hashCode());
             databaseStatement.setString(2, date);
             databaseStatement.setString(3, lastDay);
             ResultSet resultSet = databaseStatement.executeQuery();
             while (resultSet.next()) {
-                titles.add(resultSet.getString("title"));
+                count = resultSet.getInt(1);
             }
             databaseConnector.close();
         } catch (SQLException | ParseException e) {
@@ -136,6 +138,6 @@ public class NewsDaoImp implements NewsDao {
                 }
             }
         }
-        return titles;
+        return count;
     }
 }
