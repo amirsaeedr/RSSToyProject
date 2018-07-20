@@ -11,8 +11,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -93,14 +95,14 @@ public class Scraper implements Runnable {
 
     private Date getNewsDate(Element item) {
         String dateString = item.select("pubDate").html();
-        String formatString = getDateFormat(RSSAddress);
+        String formatString = getDateFormat(RSSAddress, dateString);
         SimpleDateFormat format = new SimpleDateFormat(formatString);
         try {
             return format.parse(dateString);
         } catch (ParseException e) {
             logger.error("Couldn't parse the String date " + dateString + " by format " + formatString, e);
+            return new Timestamp(System.currentTimeMillis());
         }
-        return null;
     }
 
     private String getNewsLink(Element item) {
@@ -112,7 +114,8 @@ public class Scraper implements Runnable {
         try {
             return contentDoc.getElementsByClass(contentClass).text();
         } catch (NullPointerException e) {
-            System.out.println(e.getMessage());
+            logger.error("could find content");
+            logger.info(e);
         }
         return null;
     }
@@ -136,10 +139,22 @@ public class Scraper implements Runnable {
         return contentClass;
     }
 
-    private String getDateFormat(String RSSAddress) {
+    private String getDateFormat(String RSSAddress, String dateString) {
         String dateFormat = siteDao.getDateFormat(RSSAddress);
+        SimpleDateFormat simpleDateFormat;
         if (dateFormat == null || dateFormat.isEmpty()) {
-//            dateFormat = siteDao.findDateFormat(RSSAddress);
+            ArrayList<String> formats = siteDao.getDateFormats();
+            for (String format : formats) {
+                simpleDateFormat = new SimpleDateFormat(format);
+                try {
+                    simpleDateFormat.parse(dateString);
+                } catch (ParseException e) {
+                    logger.error("date format can not be found"+e.getMessage());
+                    continue;
+                }
+                siteDao.setDateFormat(format, RSSAddress);
+                return format;
+            }
         }
         //TODO
         return dateFormat;

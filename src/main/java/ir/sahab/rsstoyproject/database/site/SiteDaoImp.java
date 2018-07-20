@@ -2,10 +2,10 @@ package ir.sahab.rsstoyproject.database.site;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import ir.sahab.rsstoyproject.database.C3P0DataSource;
-import ir.sahab.rsstoyproject.scraper.ScraperPool;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -19,33 +19,6 @@ public class SiteDaoImp implements SiteDao {
     public SiteDaoImp() {
         dataSource = C3P0DataSource.getInstance();
         logger = Logger.getLogger(SiteDaoImp.class);
-        String[] tmpArray = {
-                "E, MMM dd yyyy HH:mm:ss",
-                "E, dd MMM yyyy HH:mm:ss",
-                "MMM dd yyyy HH:mm:ss",
-                "E, MMM dd yyyy HH:mm",
-                "E, dd MMM yyyy HH:mm:ss",
-                "E, dd MMM yyyy HH:mm:ss Z",
-                "dd MMM yyyy HH:mm:ss Z",
-                "yyyy-MM-dd'T'HH:mm:ss",
-                "EEE, dd MMM yyyy HH:mm:ss Z",
-                "dd MMM yyyy HH:mm:ss Z",
-                "EEE, dd MMM yyyy HH:mm",
-                "dd MMM yyyy HH:mm",
-                "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
-                "EEE, d MMM yyyy HH:mm:ss Z",
-                "EEE, dd MMM yyyy HH:mm:ss zzz",
-                "yyyy-mm-dd HH:mm:ss",
-                "yyyy-mm-dd hh:mm:ss",
-                "yyyy-MM-dd'T'HH:mm:ssZ",
-                "yyyy-MM-dd'T'HH:mm:ss",
-                "yyyy-MM-dd'T'HH:mm:ssZ",
-                "yyyy-MM-dd'T'HH:mm:ss Z",
-                "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
-                "yyyy-MM-dd'T'hh:mm:ssXXX",
-                "dd MMM yyyy HH:mm:ss Z",
-                "MM/dd/yyyy",
-        };
     }
 
 
@@ -130,15 +103,19 @@ public class SiteDaoImp implements SiteDao {
     @Override
     public void addSite(String siteURL, String pattern) {
         try {
+            String site = siteURL.split("/")[2];
             databaseConnector = dataSource.getConnection();
-            PreparedStatement databaseStatement = databaseConnector.prepareStatement("insert into Site(site, contentClass) values(?, ?);");
+            PreparedStatement databaseStatement = databaseConnector.prepareStatement("insert into Site(RSSLink, contentClass, site, siteId) values(?, ?, ?, ?);");
             databaseStatement.setString(1, siteURL);
             databaseStatement.setString(2, pattern);
+            databaseStatement.setString(3, site);
+            databaseStatement.setInt(4, site.hashCode());
             databaseStatement.executeUpdate();
             databaseConnector.close();
         } catch (MySQLIntegrityConstraintViolationException e) {
             return;
         } catch (SQLException e) {
+            System.out.println(e.getMessage());
             logger.error("Error! Couldn't add new website to the database", e);
         } finally {
             if (databaseConnector != null) {
@@ -154,6 +131,56 @@ public class SiteDaoImp implements SiteDao {
     @Override
     public String findPattern(String RSSLink) {
         return null;
+    }
+
+    @Override
+    public ArrayList<String> getDateFormats() {
+        ArrayList<String> formats = new ArrayList<>();
+        String dateFormat;
+        try {
+            databaseConnector = dataSource.getConnection();
+            PreparedStatement query = databaseConnector.prepareStatement("select * from DateFormat ");
+            ResultSet queryResult = query.executeQuery();
+            while (queryResult.next()) {
+                dateFormat = queryResult.getString("Format");
+                formats.add(dateFormat);
+//                System.out.println(dateFormat);
+            }
+            databaseConnector.close();
+            return formats;
+        } catch (SQLException e) {
+            logger.error("Error! Getting date formats");
+        } finally {
+            if (databaseConnector != null) {
+                try {
+                    databaseConnector.close();
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void setDateFormat(String format, String rssLink) {
+        try {
+            databaseConnector = dataSource.getConnection();
+            PreparedStatement query = databaseConnector.prepareStatement("update Site set dateFormat = ? where RSSLink = ?");
+            query.setString(1, format);
+            query.setString(2, rssLink);
+            int queryResult = query.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("can't set time format");
+        } finally {
+            if (databaseConnector != null) {
+                try {
+                    databaseConnector.close();
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
     }
 
 }
