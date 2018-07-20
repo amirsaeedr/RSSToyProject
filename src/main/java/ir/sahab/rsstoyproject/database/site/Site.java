@@ -6,7 +6,7 @@ public class Site {
     private String name;
     private String pattern;
     private String dateFormat;
-    private String RSSLink;
+    private String rssLink;
     private int siteId;
 
     public void setName(String name) {
@@ -21,8 +21,8 @@ public class Site {
         this.dateFormat = dateFormat;
     }
 
-    public void setRSSLink(String RSSLink) {
-        this.RSSLink = RSSLink;
+    public void setRssLink(String rssLink) {
+        this.rssLink = rssLink;
     }
 
     public void setSiteId(int siteId) {
@@ -41,7 +41,7 @@ public class Site {
         return dateFormat;
     }
 
-    public String getRSSLink() { return RSSLink; }
+    public String getRssLink() { return rssLink; }
 
     public int getSiteId() {
         return siteId;
@@ -51,7 +51,7 @@ public class Site {
         this.name = name;
         this.pattern = pattern;
         this.dateFormat = dateFormat;
-        this.RSSLink = rssLink;
+        this.rssLink = rssLink;
         this.siteId = siteId;
     }
 

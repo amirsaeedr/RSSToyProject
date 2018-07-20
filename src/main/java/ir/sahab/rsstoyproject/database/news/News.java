@@ -22,10 +22,6 @@ public class News {
     public News() {
     }
 
-//    public News(String title) {
-//        this.title = title;
-//    }
-
     public String getTitle() {
         return title;
     }

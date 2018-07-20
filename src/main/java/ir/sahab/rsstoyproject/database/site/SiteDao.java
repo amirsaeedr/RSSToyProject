@@ -4,17 +4,15 @@ import java.util.ArrayList;
 import java.util.Queue;
 
 public interface SiteDao {
-    String getPattern(String RSSLink);
+    String getPattern(String rssLink);
 
     String getDateFormat(String site);
 
-    Queue<String> getURLs();
+    Queue<String> getUrls();
 
-    void addSite(String siteURL, String pattern);
-
-    String findPattern(String RSSLink);
+    void addSite(String siteUrl, String pattern);
 
     ArrayList<String> getDateFormats();
 
-    void setDateFormat(String format , String rssLink);
+    void setDateFormat(String format, String rssLink);
 }

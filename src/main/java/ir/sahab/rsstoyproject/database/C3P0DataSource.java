@@ -34,15 +34,13 @@ public class C3P0DataSource {
             comboPooledDataSource.setAcquireIncrement(5);
             comboPooledDataSource.setMaxPoolSize(20);
             comboPooledDataSource.setMaxStatements(200);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (PropertyVetoException e) {
+        } catch (IOException | PropertyVetoException e) {
             //TODO
             System.out.println(e.getMessage());
         }
     }
 
-    public static C3P0DataSource getInstance() {
+    public synchronized static C3P0DataSource getInstance() {
         if (instance == null) {
             instance = new C3P0DataSource();
         }
@@ -52,6 +50,7 @@ public class C3P0DataSource {
         try {
             return this.comboPooledDataSource.getConnection();
         } catch (SQLException e) {
+            //TODO
             System.out.println(e.getMessage());
         }
         return null;

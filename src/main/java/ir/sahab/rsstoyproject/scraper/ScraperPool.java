@@ -3,7 +3,6 @@ package ir.sahab.rsstoyproject.scraper;
 import ir.sahab.rsstoyproject.database.site.SiteDao;
 import ir.sahab.rsstoyproject.database.site.SiteDaoImp;
 
-import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,7 +18,7 @@ public class ScraperPool implements Runnable {
 
     @Override
     public void run() {
-        Queue<String> urls = siteDao.getURLs();
+        Queue<String> urls = siteDao.getUrls();
         for (String url : urls) {
             executor.execute(new Scraper(url));
         }

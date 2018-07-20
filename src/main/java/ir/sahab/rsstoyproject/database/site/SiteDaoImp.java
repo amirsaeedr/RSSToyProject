@@ -12,7 +12,6 @@ import java.util.Queue;
 
 public class SiteDaoImp implements SiteDao {
     private static Logger logger = null;
-    private final List<String> dateFormats = null;
     private Connection databaseConnector;
     private C3P0DataSource dataSource;
 
@@ -23,11 +22,11 @@ public class SiteDaoImp implements SiteDao {
 
 
     @Override
-    public String getPattern(String RSSLink) {
+    public String getPattern(String rssLink) {
         try {
             databaseConnector = dataSource.getConnection();
             PreparedStatement query = databaseConnector.prepareStatement("select * from Site where RSSlink = ?");
-            query.setString(1, RSSLink);
+            query.setString(1, rssLink);
             ResultSet queryResult = query.executeQuery();
             while (queryResult.next()) {
                 String pattern = queryResult.getString("contentClass");
@@ -35,7 +34,7 @@ public class SiteDaoImp implements SiteDao {
                 return pattern;
             }
         } catch (SQLException e) {
-            logger.error("Error! Getting pattern for " + RSSLink + " failed", e);
+            logger.error("Error! Getting pattern for " + rssLink + " failed", e);
         } finally {
             if (databaseConnector != null) {
                 try {
@@ -76,7 +75,7 @@ public class SiteDaoImp implements SiteDao {
     }
 
     @Override
-    public Queue<String> getURLs() {
+    public Queue<String> getUrls() {
         Queue<String> urls = new LinkedList<>();
         try {
             databaseConnector = dataSource.getConnection();
@@ -101,12 +100,12 @@ public class SiteDaoImp implements SiteDao {
     }
 
     @Override
-    public void addSite(String siteURL, String pattern) {
+    public void addSite(String siteUrl, String pattern) {
         try {
-            String site = siteURL.split("/")[2];
+            String site = siteUrl.split("/")[2];
             databaseConnector = dataSource.getConnection();
             PreparedStatement databaseStatement = databaseConnector.prepareStatement("insert into Site(RSSLink, contentClass, site, siteId) values(?, ?, ?, ?);");
-            databaseStatement.setString(1, siteURL);
+            databaseStatement.setString(1, siteUrl);
             databaseStatement.setString(2, pattern);
             databaseStatement.setString(3, site);
             databaseStatement.setInt(4, site.hashCode());
@@ -129,11 +128,6 @@ public class SiteDaoImp implements SiteDao {
     }
 
     @Override
-    public String findPattern(String RSSLink) {
-        return null;
-    }
-
-    @Override
     public ArrayList<String> getDateFormats() {
         ArrayList<String> formats = new ArrayList<>();
         String dateFormat;
@@ -144,7 +138,6 @@ public class SiteDaoImp implements SiteDao {
             while (queryResult.next()) {
                 dateFormat = queryResult.getString("Format");
                 formats.add(dateFormat);
-//                System.out.println(dateFormat);
             }
             databaseConnector.close();
             return formats;

@@ -1,6 +1,6 @@
 packages
 ==?????
-valid URL for News Agency
+valid url for News Agency
 Naming Convention
 yellow parts of IntellIJ
 packaging

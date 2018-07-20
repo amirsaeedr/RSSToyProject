@@ -1,7 +1,6 @@
 package ir.sahab.rsstoyproject.site;
 
 import ir.sahab.rsstoyproject.database.site.SiteDaoImp;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -36,7 +35,7 @@ public class SiteDaoImpTest {
         URLs.add("https://www.farsnews.com/rss");
         URLs.add("https://www.mashreghnews.ir/rss");
         URLs.add("http://www.tabnak.ir/fa/rss/allnews");
-        assertEquals(URLs, siteDaoImpTest.getURLs());
+        assertEquals(URLs, siteDaoImpTest.getUrls());
     }
 
     @Test

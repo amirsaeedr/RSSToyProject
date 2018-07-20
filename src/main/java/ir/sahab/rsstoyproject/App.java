@@ -21,6 +21,7 @@ public class App {
             ShellFactory.createConsoleShell("RSSFeedReader", "", new RequestHandler())
                     .commandLoop();
         } catch (IOException e) {
+            //TODO
             System.out.println(e.getMessage());
         }
     }

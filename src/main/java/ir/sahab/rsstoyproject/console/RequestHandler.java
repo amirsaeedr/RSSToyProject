@@ -40,9 +40,9 @@ public class RequestHandler {
     }
 
     @Command(description = "add new website")
-    public void addNewSite(@Param(name = "RSSLink") String RSSLink, @Param(name = "pattern") String pattern) {
+    public void addNewSite(@Param(name = "rssLink") String rssLink, @Param(name = "pattern") String pattern) {
         String datePattern = null;
-        siteDao.addSite(RSSLink, pattern);
+        siteDao.addSite(rssLink, pattern);
     }
 
     @Command(description = "search in title and text")

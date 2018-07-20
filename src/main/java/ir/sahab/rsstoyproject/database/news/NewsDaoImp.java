@@ -15,12 +15,10 @@ public class NewsDaoImp implements NewsDao {
     private static Logger logger = null;
     private Connection databaseConnector;
     private C3P0DataSource dataSource;
-    private static int count = 0;
 
     public NewsDaoImp() {
         logger = Logger.getLogger(NewsDao.class);
         dataSource = C3P0DataSource.getInstance();
-//        databaseConnector = dataSource.getConnection();
     }
 
     @Override

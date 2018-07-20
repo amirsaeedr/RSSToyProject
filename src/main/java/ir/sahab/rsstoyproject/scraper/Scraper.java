@@ -22,71 +22,69 @@ import org.apache.log4j.Logger;
 public class Scraper implements Runnable {
     private static Logger logger = null;
     private Document contentDoc = null;
-    private Document RSSDoc = null;
-    private Thread thread;
-    private String RSSAddress;
+    private Document rssDoc = null;
+    private String rssAddress;
     private NewsDao newsDao;
     private SiteDao siteDao;
-    private String URL;
+    private String url;
 
-    public Scraper(String URL) {
+    public Scraper(String url) {
         logger = Logger.getLogger(Scraper.class);
-        this.URL = URL;
+        this.url = url;
         newsDao = new NewsDaoImp();
         siteDao = new SiteDaoImp();
     }
 
     @Override
     public void run() {
-        scrape(URL);
+        scrape(url);
     }
 
     private void scrapeNewsData() {
-        Elements items = null;
+        Elements items;
         try {
-            items = RSSDoc.select("item");
+            items = rssDoc.select("item");
         } catch (NullPointerException e) {
             logger.error("Error! Item couldn't be fetched from the RSS", e);
             return;
         }
-        String title = null;
-        String content = null;
-        String site = null;
-        String newsLink = null;
-        Date date = null;
-        int ID = 0;
+        String title;
+        String content;
+        String site;
+        String newsLink;
+        Date date;
+        int id;
         for (Element item : items) {
             title = getNewsTitle(item);
             date = getNewsDate(item);
             newsLink = getNewsLink(item);
             content = getNewsContent(newsLink);
             site = getNewsSite();
-            ID = newsLink.hashCode();
-            News news = new News(title, date, newsLink, content, site.hashCode(), ID);
+            id = newsLink.hashCode();
+            News news = new News(title, date, newsLink, content, site.hashCode(), id);
             if (!newsDao.addNews(news)) {
                 break;
             }
         }
     }
 
-    private void scrape(String RSSLink) {
+    private void scrape(String rssLink) {
         try {
-            RSSAddress = RSSLink;
-            RSSDoc = Jsoup.connect(RSSLink).get();
+            rssAddress = rssLink;
+            rssDoc = Jsoup.connect(rssLink).get();
         } catch (java.net.UnknownHostException e) {
             logger.error("Error! Rejected by the website");
             logger.info(e);
             return;
         } catch (IOException e) {
-            //TODO
-            logger.error("Error! Couldn't Scrape " + RSSLink, e);
+            logger.error("Error! Couldn't Scrape " + rssLink, e);
             return;
         }
         scrapeNewsData();
     }
 
     private String getNewsSite() {
-        return RSSAddress.split("/")[2];
+        return rssAddress.split("/")[2];
     }
 
     private String getNewsTitle(Element item) {
@@ -95,7 +93,7 @@ public class Scraper implements Runnable {
 
     private Date getNewsDate(Element item) {
         String dateString = item.select("pubDate").html();
-        String formatString = getDateFormat(RSSAddress, dateString);
+        String formatString = getDateFormat(rssAddress, dateString);
         SimpleDateFormat format = new SimpleDateFormat(formatString);
         try {
             return format.parse(dateString);
@@ -131,12 +129,7 @@ public class Scraper implements Runnable {
 
     private String getContentClass(String newsLink) {
         getContentDocument(newsLink);
-        String contentClass = siteDao.getPattern(RSSAddress);
-//        if (contentClass == null || contentClass.isEmpty()) {
-//            contentClass = configController.findConfig(contentDoc);
-//        }
-        //TODO
-        return contentClass;
+        return siteDao.getPattern(rssAddress);
     }
 
     private String getDateFormat(String RSSAddress, String dateString) {
@@ -149,14 +142,13 @@ public class Scraper implements Runnable {
                 try {
                     simpleDateFormat.parse(dateString);
                 } catch (ParseException e) {
-                    logger.error("date format can not be found"+e.getMessage());
+                    logger.error("date format can not be found" + e.getMessage());
                     continue;
                 }
                 siteDao.setDateFormat(format, RSSAddress);
                 return format;
             }
         }
-        //TODO
         return dateFormat;
     }
 
