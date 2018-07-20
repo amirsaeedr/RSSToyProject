@@ -26,7 +26,6 @@ public class RequestHandler {
     public void countOfNews(@Param(name = "webSiteAddress") String webSiteLink, @Param(name = "date") String date) {
         if (websiteLinkValidation(webSiteLink) & isThisDateValid(date))
             System.out.println(newsDao.getNewsFromADay(webSiteLink, date));
-
     }
 
     @Command(description = "get latest news of rss")
@@ -41,8 +40,9 @@ public class RequestHandler {
 
     @Command(description = "add new website")
     public void addNewSite(@Param(name = "rssLink") String rssLink, @Param(name = "pattern") String pattern) {
-        String datePattern = null;
-        siteDao.addSite(rssLink, pattern);
+        if (websiteLinkValidation(rssLink)) {
+            siteDao.addSite(rssLink, pattern);
+        }
     }
 
     @Command(description = "search in title and text")
@@ -67,7 +67,7 @@ public class RequestHandler {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
         simpleDateFormat.setLenient(false);
         try {
-            Date date = simpleDateFormat.parse(dateToValidate);
+            simpleDateFormat.parse(dateToValidate);
 
         } catch (ParseException e) {
             System.out.println("date is not valid");
