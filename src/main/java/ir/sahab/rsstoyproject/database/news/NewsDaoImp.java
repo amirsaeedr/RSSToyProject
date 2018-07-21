@@ -59,7 +59,7 @@ public class NewsDaoImp implements NewsDao {
             databaseStatement.setString(1, "%" + text + "%");
             ResultSet queryResult = databaseStatement.executeQuery();
             while (queryResult.next()) {
-                result.add(queryResult.getString("title"));
+                result.add(queryResult.getString("title") + "the link");
             }
             databaseConnector.close();
             return result;

@@ -40,7 +40,7 @@ public class SiteDaoImp implements SiteDao {
                 try {
                     databaseConnector.close();
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+//                    System.out.println(e.getMessage());
                 }
             }
         }
@@ -67,7 +67,7 @@ public class SiteDaoImp implements SiteDao {
                 try {
                     databaseConnector.close();
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+//                    System.out.println(e.getMessage());
                 }
             }
         }
@@ -92,7 +92,7 @@ public class SiteDaoImp implements SiteDao {
                 try {
                     databaseConnector.close();
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+//                    System.out.println(e.getMessage());
                 }
             }
         }
@@ -120,7 +120,7 @@ public class SiteDaoImp implements SiteDao {
                 try {
                     databaseConnector.close();
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+//                    System.out.println(e.getMessage());
                 }
             }
         }
@@ -147,7 +147,7 @@ public class SiteDaoImp implements SiteDao {
                 try {
                     databaseConnector.close();
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+//                    System.out.println(e.getMessage());
                 }
             }
         }
@@ -169,7 +169,6 @@ public class SiteDaoImp implements SiteDao {
                 try {
                     databaseConnector.close();
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
                 }
             }
         }

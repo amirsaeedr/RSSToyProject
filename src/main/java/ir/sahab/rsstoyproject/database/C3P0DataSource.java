@@ -52,7 +52,7 @@ public class C3P0DataSource {
             }
         } catch (MySQLIntegrityConstraintViolationException ignored) {
         } catch (SQLException e1) {
-            e1.printStackTrace();
+//            e1.printStackTrace();
         }
     }
 
@@ -90,7 +90,7 @@ public class C3P0DataSource {
             return this.comboPooledDataSource.getConnection();
         } catch (SQLException e) {
             //TODO
-            System.out.println(e.getMessage());
+//            System.out.println(e.getMessage());
         }
         return null;
     }
