@@ -28,12 +28,12 @@ public class Scraper implements Runnable {
     private SiteDao siteDao;
     private String url;
 
-    public Scraper(String url) {
+    public Scraper(String url, String database) {
         logger = Logger.getLogger(Scraper.class);
         this.url = url;
         this.rssAddress = url;
-        newsDao = new NewsDaoImp("RSSDatabase");
-        siteDao = new SiteDaoImp("RSSDatabaseTest");
+        newsDao = new NewsDaoImp(database);
+        siteDao = new SiteDaoImp(database);
     }
 
     @Override

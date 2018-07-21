@@ -12,10 +12,12 @@ import java.sql.Statement;
 import java.util.Properties;
 
 public class DaoImpTest {
-    protected static void createDatabaseTest(){
+    protected static void createDatabaseTest() {
         Connection initializerConnection = null;
         Statement initializerStatement = null;
         String commands = null;
+        String username = null;
+        String password = null ;
         try {
             Properties prop = new Properties();
             InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream("SQL-Config.properties");
@@ -24,8 +26,8 @@ public class DaoImpTest {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            String username = prop.getProperty("Username");
-            String password = prop.getProperty("Password");
+            username = prop.getProperty("Username");
+            password = prop.getProperty("Password");
             commands = prop.getProperty("Commands");
             initializerConnection = DriverManager.getConnection("jdbc:mysql://localhost/?", username, password);
             initializerStatement = initializerConnection.createStatement();
@@ -34,17 +36,17 @@ public class DaoImpTest {
             e.printStackTrace();
         }
         try {
-            initializerConnection = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase", "root", "li24v2hk77");
+            initializerConnection = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase", username, password);
             initializerStatement = initializerConnection.createStatement();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         try {
-            for(String command: commands.split(";")){
+            for (String command : commands.split(";")) {
                 initializerStatement.executeUpdate(command);
             }
         } catch (MySQLIntegrityConstraintViolationException ignored) {
-        }catch (SQLException e1) {
+        } catch (SQLException e1) {
             e1.printStackTrace();
         }
     }
