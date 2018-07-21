@@ -17,7 +17,7 @@ import java.util.Properties;
 public class C3P0DataSource {
     private static C3P0DataSource instance;
     private ComboPooledDataSource comboPooledDataSource;
-    private void initializeDatabase() {
+    private void initializeDatabase(String database) {
         Connection initializerConnection = null;
         Statement initializerStatement = null;
         String commands = null;
@@ -36,12 +36,12 @@ public class C3P0DataSource {
             commands = prop.getProperty("Commands");
             initializerConnection = DriverManager.getConnection("jdbc:mysql://localhost/?", username, password);
             initializerStatement = initializerConnection.createStatement();
-            initializerStatement.executeUpdate("CREATE DATABASE if not exists RSSDatabase CHARACTER SET utf8 COLLATE utf8_general_ci;");
+            initializerStatement.executeUpdate("CREATE DATABASE if not exists " + database + " CHARACTER SET utf8 COLLATE utf8_general_ci;");
         } catch (SQLException e) {
             e.printStackTrace();
         }
         try {
-            initializerConnection = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase", username, password);
+            initializerConnection = DriverManager.getConnection("jdbc:mysql://localhost/" + database, username, password);
             initializerStatement = initializerConnection.createStatement();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -57,7 +57,7 @@ public class C3P0DataSource {
     }
 
     private C3P0DataSource(String database) {
-        initializeDatabase();
+        initializeDatabase(database);
         comboPooledDataSource = new ComboPooledDataSource();
         try {
             Properties prop = new Properties();
@@ -79,9 +79,9 @@ public class C3P0DataSource {
         }
     }
 
-    public static C3P0DataSource getInstance(String databse) {
+    public static C3P0DataSource getInstance(String database) {
         if (instance == null) {
-            instance = new C3P0DataSource(databse);
+            instance = new C3P0DataSource(database);
         }
         return instance;
     }

@@ -36,7 +36,7 @@ public class DaoImpTest {
             e.printStackTrace();
         }
         try {
-            initializerConnection = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabase", username, password);
+            initializerConnection = DriverManager.getConnection("jdbc:mysql://localhost/RSSDatabaseTest", username, password);
             initializerStatement = initializerConnection.createStatement();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -163,7 +163,7 @@ public class SiteDaoImp implements SiteDao {
             query.setString(2, rssLink);
             int queryResult = query.executeUpdate();
         } catch (SQLException e) {
-            logger.error("can't set time format");
+            logger.error("can't set time format for " + rssLink);
         } finally {
             if (databaseConnector != null) {
                 try {

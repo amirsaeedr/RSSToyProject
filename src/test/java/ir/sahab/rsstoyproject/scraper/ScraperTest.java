@@ -54,10 +54,6 @@ public class ScraperTest {
         }
     }
 
-//    @Test
-//    public void getDateFormatTest(){
-//        assertEquals("dd MMM yyyy HH:mm:ss", scraperTest.getDateFormat("http://www.tabnak.ir/fa/rss/allnews"));
-//    }
 
     @Test
     public void getContentClass(){
