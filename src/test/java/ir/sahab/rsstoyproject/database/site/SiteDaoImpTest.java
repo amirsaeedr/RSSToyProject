@@ -1,20 +1,37 @@
-package ir.sahab.rsstoyproject.site;
+package ir.sahab.rsstoyproject.database.site;
 
 import ir.sahab.rsstoyproject.database.site.SiteDaoImp;
+import ir.sahab.rsstoyproject.database.DaoImpTest;
+import ir.sahab.rsstoyproject.database.news.News;
+import ir.sahab.rsstoyproject.database.news.NewsDaoImp;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Date;
 import java.util.LinkedList;
+import java.util.Properties;
 import java.util.Queue;
 
 import static org.junit.Assert.*;
 
-public class SiteDaoImpTest {
+public class SiteDaoImpTest extends DaoImpTest {
+    private static String[] rssLinks;
+    private static String[] contentClasses;
+    private static String[] dateFormats;
+    private static int[] siteIds;
+    private static String[] sites;
     private static SiteDaoImp siteDaoImpTest;
 
     @BeforeClass
     public static void initialize(){
-//        siteDaoImpTest = SiteDaoImp();
+        siteDaoImpTest = new SiteDaoImp("RSSDatabaseTest");
+        createDatabaseTest();
     }
 
     @Test

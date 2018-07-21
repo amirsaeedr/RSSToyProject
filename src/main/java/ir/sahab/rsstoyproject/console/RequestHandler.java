@@ -18,8 +18,8 @@ public class RequestHandler {
     private SiteDao siteDao;
 
     public RequestHandler() {
-        newsDao = new NewsDaoImp();
-        siteDao = new SiteDaoImp();
+        newsDao = new NewsDaoImp("DatabaseConfig.properties");
+        siteDao = new SiteDaoImp("DatabaseConfig.properties");
     }
 
     @Command(description = "news count of rss link for a day")

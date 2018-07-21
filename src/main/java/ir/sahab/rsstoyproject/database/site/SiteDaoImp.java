@@ -15,8 +15,8 @@ public class SiteDaoImp implements SiteDao {
     private Connection databaseConnector;
     private C3P0DataSource dataSource;
 
-    public SiteDaoImp() {
-        dataSource = C3P0DataSource.getInstance();
+    public SiteDaoImp(String database) {
+        dataSource = C3P0DataSource.getInstance(database);
         logger = Logger.getLogger(SiteDaoImp.class);
     }
 
@@ -112,7 +112,6 @@ public class SiteDaoImp implements SiteDao {
             databaseStatement.executeUpdate();
             databaseConnector.close();
         } catch (MySQLIntegrityConstraintViolationException e) {
-            return;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             logger.error("Error! Couldn't add new website to the database", e);

@@ -12,4 +12,6 @@ public interface NewsDao {
     ArrayList<String> getLatestNews(String siteName);
 
     int getNewsFromADay(String siteName, String date);
+
+    void executeUpdate(String query);
 }

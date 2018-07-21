@@ -31,8 +31,9 @@ public class Scraper implements Runnable {
     public Scraper(String url) {
         logger = Logger.getLogger(Scraper.class);
         this.url = url;
-        newsDao = new NewsDaoImp();
-        siteDao = new SiteDaoImp();
+        this.rssAddress = url;
+        newsDao = new NewsDaoImp("RSSDatabase");
+        siteDao = new SiteDaoImp("RSSDatabaseTest");
     }
 
     @Override
@@ -83,15 +84,15 @@ public class Scraper implements Runnable {
         scrapeNewsData();
     }
 
-    private String getNewsSite() {
+    public String getNewsSite() {
         return rssAddress.split("/")[2];
     }
 
-    private String getNewsTitle(Element item) {
+    public String getNewsTitle(Element item) {
         return item.select("title").html();
     }
 
-    private Date getNewsDate(Element item) {
+    public Date getNewsDate(Element item) {
         String dateString = item.select("pubDate").html();
         String formatString = getDateFormat(rssAddress, dateString);
         SimpleDateFormat format = new SimpleDateFormat(formatString);
@@ -103,7 +104,7 @@ public class Scraper implements Runnable {
         }
     }
 
-    private String getNewsLink(Element item) {
+    public String getNewsLink(Element item) {
         return item.select("link").html();
     }
 
@@ -127,12 +128,12 @@ public class Scraper implements Runnable {
         }
     }
 
-    private String getContentClass(String newsLink) {
+    public String getContentClass(String newsLink) {
         getContentDocument(newsLink);
         return siteDao.getPattern(rssAddress);
     }
 
-    private String getDateFormat(String RSSAddress, String dateString) {
+    public String getDateFormat(String RSSAddress, String dateString) {
         String dateFormat = siteDao.getDateFormat(RSSAddress);
         SimpleDateFormat simpleDateFormat;
         if (dateFormat == null || dateFormat.isEmpty()) {

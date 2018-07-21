@@ -5,6 +5,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.beans.PropertyVetoException;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -13,19 +14,16 @@ import java.util.Properties;
 public class C3P0DataSource {
     private static C3P0DataSource instance;
     private ComboPooledDataSource comboPooledDataSource;
-    private static String username;
-    private static String password;
-    private static String database;
 
 
-    private C3P0DataSource() {
+    private C3P0DataSource(String database) {
         comboPooledDataSource = new ComboPooledDataSource();
         try {
             Properties prop = new Properties();
-            prop.load(new FileInputStream("../RSSToyProject/src/main/resources/databaseConfig.properties"));
-            database = prop.getProperty("Database");
-            username = prop.getProperty("Username");
-            password = prop.getProperty("Password");
+            InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream("SQL-Config.properties");
+            prop.load(resource);
+            String username = prop.getProperty("Username");
+            String password = prop.getProperty("Password");
             comboPooledDataSource.setDriverClass("com.mysql.jdbc.Driver");
             comboPooledDataSource.setJdbcUrl("jdbc:mysql://localhost/" + database + "?useUnicode=yes&characterEncoding=UTF-8");
             comboPooledDataSource.setUser(username);
@@ -36,13 +34,13 @@ public class C3P0DataSource {
             comboPooledDataSource.setMaxStatements(200);
         } catch (IOException | PropertyVetoException e) {
             //TODO
-            System.out.println(e.getMessage());
+//            System.out.println(e.getMessage());
         }
     }
 
-    public synchronized static C3P0DataSource getInstance() {
+    public static C3P0DataSource getInstance(String propertiesFile) {
         if (instance == null) {
-            instance = new C3P0DataSource();
+            instance = new C3P0DataSource(propertiesFile);
         }
         return instance;
     }

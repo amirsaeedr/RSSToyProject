@@ -1,8 +1,8 @@
-package ir.sahab.rsstoyproject.scraper;
+package ir.sahab.rsstoyproject.database;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-import ir.sahab.rsstoyproject.database.site.SiteDao;
-import ir.sahab.rsstoyproject.database.site.SiteDaoImp;
+
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -10,28 +10,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
-import java.util.Queue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class ScraperPool implements Runnable {
-    private ExecutorService executor;
-    private SiteDao siteDao;
-
-    public ScraperPool(String propertiesFile) {
-        initializeDatabase();
-        executor = Executors.newFixedThreadPool(10);
-        siteDao = new SiteDaoImp(propertiesFile);
-    }
-
-    @Override
-    public void run() {
-        Queue<String> urls = siteDao.getUrls();
-        for (String url : urls) {
-            executor.execute(new Scraper(url));
-        }
-    }
-    private void initializeDatabase() {
+public class DaoImpTest {
+    protected static void createDatabaseTest(){
         Connection initializerConnection = null;
         Statement initializerStatement = null;
         String commands = null;
@@ -48,7 +29,7 @@ public class ScraperPool implements Runnable {
             commands = prop.getProperty("Commands");
             initializerConnection = DriverManager.getConnection("jdbc:mysql://localhost/?", username, password);
             initializerStatement = initializerConnection.createStatement();
-            initializerStatement.executeUpdate("CREATE DATABASE if not exists RSSDatabase CHARACTER SET utf8 COLLATE utf8_general_ci;");
+            initializerStatement.executeUpdate("CREATE DATABASE if not exists RSSDatabaseTest CHARACTER SET utf8 COLLATE utf8_general_ci;");
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -47,7 +47,7 @@ public class Site {
         return siteId;
     }
 
-    public Site(String name, String pattern, String dateFormat, String rssLink, int siteId, Date lastUpdate) {
+    public Site(String name, String pattern, String dateFormat, String rssLink, int siteId) {
         this.name = name;
         this.pattern = pattern;
         this.dateFormat = dateFormat;

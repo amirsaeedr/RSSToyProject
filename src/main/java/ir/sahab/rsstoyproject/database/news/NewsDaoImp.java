@@ -16,9 +16,9 @@ public class NewsDaoImp implements NewsDao {
     private Connection databaseConnector;
     private C3P0DataSource dataSource;
 
-    public NewsDaoImp() {
+    public NewsDaoImp(String database) {
         logger = Logger.getLogger(NewsDao.class);
-        dataSource = C3P0DataSource.getInstance();
+        dataSource = C3P0DataSource.getInstance(database);
     }
 
     @Override
@@ -137,5 +137,16 @@ public class NewsDaoImp implements NewsDao {
             }
         }
         return count;
+    }
+
+    @Override
+    public void executeUpdate(String query) {
+        databaseConnector = dataSource.getConnection();
+        try {
+            Statement databaseStatement = databaseConnector.createStatement();
+            databaseStatement.executeUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
