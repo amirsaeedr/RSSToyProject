@@ -59,9 +59,9 @@ public class NewsDaoImpTest extends DaoImpTest {
         createRows();
         ArrayList<String> result = new ArrayList<>();
         String searchString = "فوری";
-        result.add("خبر فوری 1");
-        result.add("خبر فوری 2");
-        result.add("خبر فوری 3");
+        result.add( "خبر فوری 1" + "\n and the link is: link1");
+        result.add( "خبر فوری 2"  + "\n and the link is: link2");
+        result.add("خبر فوری 3"  + "\n and the link is: link3");
         assertEquals(result, newsDaoImpTest.search("title", searchString ));
     }
 

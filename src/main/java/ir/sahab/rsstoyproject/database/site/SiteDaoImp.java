@@ -112,6 +112,7 @@ public class SiteDaoImp implements SiteDao {
             databaseStatement.executeUpdate();
             databaseConnector.close();
         } catch (MySQLIntegrityConstraintViolationException e) {
+            System.out.println("This site already exists!");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             logger.error("Error! Couldn't add new website to the database", e);

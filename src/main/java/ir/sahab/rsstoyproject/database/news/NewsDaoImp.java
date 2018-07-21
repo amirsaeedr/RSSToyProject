@@ -43,7 +43,6 @@ public class NewsDaoImp implements NewsDao {
                 try {
                     databaseConnector.close();
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
                 }
             }
         }
@@ -55,11 +54,11 @@ public class NewsDaoImp implements NewsDao {
         try {
             databaseConnector = dataSource.getConnection();
             ArrayList<String> result = new ArrayList<>();
-            PreparedStatement databaseStatement = databaseConnector.prepareStatement("select title from News where " + field + " like ?;");
+            PreparedStatement databaseStatement = databaseConnector.prepareStatement("select * from News where " + field + " like ?;");
             databaseStatement.setString(1, "%" + text + "%");
             ResultSet queryResult = databaseStatement.executeQuery();
             while (queryResult.next()) {
-                result.add(queryResult.getString("title"));
+                result.add(queryResult.getString("title") + "\n and the link is: " + queryResult.getString("link"));
             }
             databaseConnector.close();
             return result;
@@ -70,7 +69,7 @@ public class NewsDaoImp implements NewsDao {
                 try {
                     databaseConnector.close();
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+//                    System.out.println(e.getMessage());
                 }
             }
         }
@@ -82,11 +81,11 @@ public class NewsDaoImp implements NewsDao {
         ArrayList<String> titles = new ArrayList<>();
         try {
             databaseConnector = dataSource.getConnection();
-            PreparedStatement databaseStatement = databaseConnector.prepareStatement("select title from News where siteId = ? order by date desc limit 10;");
+            PreparedStatement databaseStatement = databaseConnector.prepareStatement("select * from News where siteId = ? order by date desc limit 10;");
             databaseStatement.setInt(1, siteName.hashCode());
             ResultSet resultSet = databaseStatement.executeQuery();
             while (resultSet.next()) {
-                titles.add(resultSet.getString("title"));
+                titles.add(resultSet.getString("title") + "\n and the link is: " + resultSet.getString("link"));
             }
             databaseConnector.close();
         } catch (SQLException e) {
@@ -96,7 +95,7 @@ public class NewsDaoImp implements NewsDao {
                 try {
                     databaseConnector.close();
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+//                    System.out.println(e.getMessage());
                 }
             }
         }
@@ -131,7 +130,7 @@ public class NewsDaoImp implements NewsDao {
                 try {
                     databaseConnector.close();
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+//                    System.out.println(e.getMessage());
                 }
             }
         }
@@ -145,7 +144,7 @@ public class NewsDaoImp implements NewsDao {
             Statement databaseStatement = databaseConnector.createStatement();
             databaseStatement.executeUpdate(query);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error! Query not executable!", e);
         }
     }
 }
