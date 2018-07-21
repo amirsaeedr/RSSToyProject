@@ -59,7 +59,7 @@ public class NewsDaoImp implements NewsDao {
             databaseStatement.setString(1, "%" + text + "%");
             ResultSet queryResult = databaseStatement.executeQuery();
             while (queryResult.next()) {
-                result.add(queryResult.getString("title") + "the link");
+                result.add(queryResult.getString("title"));
             }
             databaseConnector.close();
             return result;
@@ -86,7 +86,6 @@ public class NewsDaoImp implements NewsDao {
             databaseStatement.setInt(1, siteName.hashCode());
             ResultSet resultSet = databaseStatement.executeQuery();
             while (resultSet.next()) {
-                System.out.println(resultSet.getString("title"));
                 titles.add(resultSet.getString("title"));
             }
             databaseConnector.close();
